@@ -11,7 +11,6 @@ try:
 except ImportError:
     import Tkinter as tk
 
-# from winsound import PlaySound, SND_FILENAME, SND_LOOP, SND_ASYNC
 SIZE = 64
 from tkinter import *
 
@@ -209,7 +208,7 @@ class Chess:
         self.root.mainloop()
 
 
-jeux = Chess()
-jeux.play()
+if __name__ == "__main__":
 
-# if __name__ == "__main__":
+    jeux = Chess()
+    jeux.play()
