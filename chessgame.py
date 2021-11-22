@@ -17,109 +17,145 @@ from tkinter import *
 
 
 class Board:
-    def __init__(self, height, width, color="#efe4d6"):
+    def __init__(self, height, width, color="#815426"):
         self.height = height
         self.width = width
         self.color = color
+        self.a = tk.PhotoImage(file="img/a.png")
+        self.b = tk.PhotoImage(file="img/b.png")
+        self.c = tk.PhotoImage(file="img/c.png")
+        self.d = tk.PhotoImage(file="img/d.png")
+        self.e = tk.PhotoImage(file="img/e.png")
+        self.f = tk.PhotoImage(file="img/f.png")
+        self.g = tk.PhotoImage(file="img/g.png")
+        self.h = tk.PhotoImage(file="img/h.png")
+
+        self.i1 = tk.PhotoImage(file="img/1.png")
+        self.i2 = tk.PhotoImage(file="img/2.png")
+        self.i3 = tk.PhotoImage(file="img/3.png")
+        self.i4 = tk.PhotoImage(file="img/4.png")
+        self.i5 = tk.PhotoImage(file="img/5.png")
+        self.i6 = tk.PhotoImage(file="img/6.png")
+        self.i7 = tk.PhotoImage(file="img/7.png")
+        self.i8 = tk.PhotoImage(file="img/8.png")
 
     def install_in(self, canvas):
         """Création de chessboard."""
-        for y in range(10):
-            for x in range(10):
-                x0 = x * SIZE
-                y0 = y * SIZE
+        for row in range(10):
+            for col in range(10):
+                x0 = col * SIZE
+                y0 = row * SIZE
                 x1 = x0 + SIZE
                 y1 = y0 + SIZE
                 # create border
-                if y < 1 or y == 9 or x < 1 or x == 9:
+                if row == 0 or row == 9 or col == 0 or col == 9:
                     canvas.create_rectangle((x0, y0, x1, y1), fill="#F8F8FF", width=0)
+                    # Alphabet
+                    if (row == 0 and col == 1) or (row == 9 and col == 1):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.a)
+                    elif (row == 0 and col == 2) or (row == 9 and col == 2):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.b)
+                    elif (row == 0 and col == 3) or (row == 9 and col == 3):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.c)
+                    elif (row == 0 and col == 4) or (row == 9 and col == 4):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.d)
+                    elif (row == 0 and col == 5) or (row == 9 and col == 5):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.e)
+                    elif (row == 0 and col == 6) or (row == 9 and col == 6):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.f)
+                    elif (row == 0 and col == 7) or (row == 9 and col == 7):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.g)
+                    elif (row == 0 and col == 8) or (row == 9 and col == 8):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.h)
+
+                    # Numbers
+                    elif (col == 0 and row == 1) or (col == 9 and row == 1):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i1)
+                    elif (col == 0 and row == 2) or (col == 9 and row == 2):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i2)
+                    elif (col == 0 and row == 3) or (col == 9 and row == 3):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i3)
+                    elif (col == 0 and row == 4) or (col == 9 and row == 4):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i4)
+                    elif (col == 0 and row == 5) or (col == 9 and row == 5):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i5)
+                    elif (col == 0 and row == 6) or (col == 9 and row == 6):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i6)
+                    elif (col == 0 and row == 7) or (col == 9 and row == 7):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i7)
+                    elif (col == 0 and row == 8) or (col == 9 and row == 8):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i8)
+
                 else:
                     canvas.create_rectangle((x0, y0, x1, y1), fill=self.color)
-                    if self.color == "#efe4d6":
-                        self.color = "#815426"
-                    else:
+                    if self.color == "#815426":
                         self.color = "#efe4d6"
+                    else:
+                        self.color = "#815426"
 
-            if self.color == "#efe4d6":
-                self.color = "#815426"
-            else:
+            if self.color == "#815426":
                 self.color = "#efe4d6"
+            else:
+                self.color = "#815426"
 
 
 class Pieces:
     def __init__(self, height, width):
         self.height = height
         self.width = width
-        self.image = tk.PhotoImage(file="img/b_bishop.png")
+        self.w_rook = tk.PhotoImage(file="img/w_rook.png")
+        self.b_rook = tk.PhotoImage(file="img/b_rook.png")
+        self.w_knight = tk.PhotoImage(file="img/w_knight.png")
+        self.b_knight = tk.PhotoImage(file="img/b_knight.png")
+        self.w_bishop = tk.PhotoImage(file="img/w_bishop.png")
+        self.b_bishop = tk.PhotoImage(file="img/b_bishop.png")
+        self.w_king = tk.PhotoImage(file="img/w_king.png")
+        self.b_king = tk.PhotoImage(file="img/b_king.png")
+        self.w_queen = tk.PhotoImage(file="img/w_queen.png")
+        self.b_queen = tk.PhotoImage(file="img/b_queen.png")
+        self.w_pawn = tk.PhotoImage(file="img/w_pawn.png")
+        self.b_pawn = tk.PhotoImage(file="img/b_pawn.png")
+        self.image = tk.PhotoImage(file="img/w_pawn.png")
 
     def install_in(self, canvas):
         """Création de chessboard."""
-        # Load an image in the script
-        # img = ImageTk.PhotoImage(Image.open("img/b_bishop.png"))
+        # x = 72
+        # y = 0
 
-        # Add image to the Canvas Items
-        canvas.create_image(10, 10, anchor=NW, image=self.image)
-        # white_list = ["w_rook", "w_knight", "w_bishop", "w_king", "w_queen", "w_pawn"]
-        # black_list = ["b_rook", "b_knight", "b_bishop", "b_king", "b_queen", "b_pawn"]
-        # for y in range(1, 10):
-        #     for x in range(1, 10):
-        #         # x0 = x * SIZE
-        #         # y0 = y * SIZE
-        #         # x1 = x0 + SIZE
-        #         # y1 = y0 + SIZE
-        #         # if y < 1 or y == 9 or x < 1 or x == 9:
-        #         #     canvas.create_rectangle((x0, y0, x1, y1), fill="#F8F8FF", width=0)
-        #         # else:
-        #         # canvas.create_rectangle((x0, y0, x1, y1), fill=self.color)
-        #         # load the .gif image file
-        #
-        #         if x == 1:
-        #
-        #             gif1 = PhotoImage(file="img/w_rook.png")
-        #
-        #             # put gif image on canvas
-        #             # pic's upper left corner (NW) on the canvas is at x=50 y=10
-        #             canvas.create_image(200, 200, image=gif1, anchor=NW)
-        #
+        black_list = ["b_rook", "b_knight", "b_bishop", "b_king", "b_queen", "b_pawn"]
+        for row in range(8):
+            y = (SIZE * (row + 1)) + 8
+            for col in range(8):
+                x = (SIZE * (col + 1)) + 8
 
+                if row == 1:
+                    canvas.create_image(x, y, anchor=NW, image=self.b_pawn)
+                elif row == 6:
+                    canvas.create_image(x, y, anchor=NW, image=self.w_pawn)
+                elif (row == 0 and col == 0) or (row == 0 and col == 7):
+                    canvas.create_image(x, y, anchor=NW, image=self.b_rook)
+                elif (row == 0 and col == 1) or (row == 0 and col == 6):
+                    canvas.create_image(x, y, anchor=NW, image=self.b_knight)
+                elif (row == 0 and col == 2) or (row == 0 and col == 5):
+                    canvas.create_image(x, y, anchor=NW, image=self.b_bishop)
+                elif row == 0 and col == 3:
+                    canvas.create_image(x, y, anchor=NW, image=self.b_queen)
+                elif row == 0 and col == 4:
+                    canvas.create_image(x, y, anchor=NW, image=self.b_king)
+                elif (row == 7 and col == 0) or (row == 7 and col == 7):
+                    canvas.create_image(x, y, anchor=NW, image=self.w_rook)
+                elif (row == 7 and col == 1) or (row == 7 and col == 6):
+                    canvas.create_image(x, y, anchor=NW, image=self.w_knight)
+                elif (row == 7 and col == 2) or (row == 7 and col == 5):
+                    canvas.create_image(x, y, anchor=NW, image=self.w_bishop)
+                elif row == 7 and col == 3:
+                    canvas.create_image(x, y, anchor=NW, image=self.w_queen)
+                elif row == 7 and col == 4:
+                    canvas.create_image(x, y, anchor=NW, image=self.w_king)
 
-# SIZE = 96
-#
-# root = tk.Tk()
-#
-# canvas = tk.Canvas(root, height=1024, width=1024)
-# canvas.pack()
-#
-# color = "#efe4d6"
-#
-# for y in range(8):
-#
-#     for x in range(8):
-#         x0 = x * SIZE
-#         y0 = y * SIZE
-#         x1 = x0 + SIZE
-#         y1 = y0 + SIZE
-#         canvas.create_rectangle((x0, y0, x1, y1), fill=color)
-#         if color == "#efe4d6":
-#             color = "#815426"
-#         else:
-#             color = "#efe4d6"
-#
-#     if color == "#efe4d6":
-#         color = "#815426"
-#     else:
-#         color = "#efe4d6"
-#
-#
-# # load the .gif image file
-# gif1 = PhotoImage(file="img/black_bishop.png")
-#
-# # put gif image on canvas
-# # pic's upper left corner (NW) on the canvas is at x=50 y=10
-# canvas.create_image(16, 16, image=gif1, anchor=NW)
-#
-# root.mainloop()
-#
+            x = 0
+            y = 0
+
 
 # #****************************************************************
 class Game:

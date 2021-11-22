@@ -22,7 +22,7 @@ root = tk.Tk()
 canvas = tk.Canvas(root, height=1024, width=1024)
 canvas.pack()
 
-color = "#efe4d6"
+color = "#815426"
 
 for y in range(8):
 
@@ -32,15 +32,15 @@ for y in range(8):
         x2 = x1 + SIZE
         y2 = y1 + SIZE
         canvas.create_rectangle((x1, y1, x2, y2), fill=color)
-        if color == "#efe4d6":
-            color = "#815426"
-        else:
+        if color == "#815426":
             color = "#efe4d6"
+        else:
+            color = "#815426"
 
-    if color == "#efe4d6":
-        color = "#815426"
-    else:
+    if color == "#815426":
         color = "#efe4d6"
+    else:
+        color = "#815426"
 
 
 # load the .gif image file
