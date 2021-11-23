@@ -184,37 +184,45 @@ class Game:
         self.board = Board(width, height)
         self.pieces = Pieces(width, height)
 
-        self.displayturn1 = tk.Label(self.frame, text="Their turn", font=("Arial", 25))
-        self.displayturn1.place(x=700, y=100)
-        self.displayturn2 = tk.Label(self.frame, text="Your turn", font=("Arial", 25))
-        self.displayturn2.place(x=700, y=200)
+        self.displayturn1 = tk.Label(
+            self.frame, text="Their turn", font=("Arial", 25)
+        ).place(x=720, y=100)
+        self.displayturn2 = tk.Label(
+            self.frame, text="Your turn", font=("Arial", 25)
+        ).place(x=720, y=200)
 
+        self.from_label1 = tk.Label(self.frame, text="From", font=("Arial", 15)).place(
+            x=650, y=150
+        )
+        self.from_label2 = tk.Label(self.frame, text="From", font=("Arial", 15)).place(
+            x=650, y=250
+        )
+
+        self.to_label1 = tk.Label(self.frame, text="To", font=("Arial", 15)).place(
+            x=860, y=150
+        )
+        self.to_label2 = tk.Label(self.frame, text="To", font=("Arial", 15)).place(
+            x=860, y=250
+        )
         # # TextBox Creation
         self.player1_input1 = tk.Entry(self.frame, font=("Arial", 18)).place(
-            x=700, y=150, height=30, width=100
+            x=720, y=150, height=30, width=100
         )
         self.player1_input2 = tk.Entry(self.frame, font=("Arial", 18)).place(
-            x=850, y=150, height=30, width=100
+            x=900, y=150, height=30, width=100
         )
 
         self.player2_input1 = tk.Entry(self.frame, font=("Arial", 18)).place(
-            x=700, y=250, height=30, width=100
+            x=720, y=250, height=30, width=100
         )
         self.player2_input2 = tk.Entry(self.frame, font=("Arial", 18)).place(
-            x=850, y=250, height=30, width=100
+            x=900, y=250, height=30, width=100
         )
-        #
-        # self.inputtxt.pack()
-        #
-        # # Button Creation
-        # self.printButton = tk.Button(
-        #     self.frame, text="Print", command=self.printInput()
-        # )
-        # self.printButton.pack()
-        #
-        # # Label Creation
-        # self.lbl = tk.Label(self.frame, text="")
-        # self.lbl.pack()
+
+        # Button Creation
+        self.btn = tk.Button(
+            self.frame, text="Ok", font=("Arial", 15), command=self.printInput()
+        ).place(x=720, y=300, height=30, width=100)
 
     def start(self):
         """Commencer à créer défender, aliens, bunkers."""
@@ -228,8 +236,9 @@ class Game:
         self.start()
 
     def printInput(self):
-        inp = self.inputtxt.get(1.0, "end-1c")
+        # inp = self.inputtxt.get(1.0, "end-1c")
         # self.lbl.config(text="Provided Input: " + inp)
+        pass
 
 
 class Chess:
@@ -241,6 +250,7 @@ class Chess:
         self.root.title("Chess game")
         self.frame = tk.Frame(self.root, width=1024, height=1024)
         self.frame.pack()
+
         # self.w = tk.Label(self.frame, text="Hello Tkinter!")
         # self.w.place(x=800, y=100)
         # self.w.pack()
