@@ -5,6 +5,8 @@ import math
 import random
 import json
 import operator
+import pygame
+from matrix import board, coordination, board_coordination
 
 try:
     import tkinter as tk
@@ -13,6 +15,8 @@ except ImportError:
 
 SIZE = 64
 from tkinter import *
+
+list(zip(board, coordination))
 
 
 class Board:
@@ -37,6 +41,8 @@ class Board:
         self.i6 = tk.PhotoImage(file="img/6.png")
         self.i7 = tk.PhotoImage(file="img/7.png")
         self.i8 = tk.PhotoImage(file="img/8.png")
+        # chessboard initial
+        self.board_initial = board_coordination
 
     def install_in(self, canvas):
         """Création de chessboard."""
@@ -69,21 +75,21 @@ class Board:
 
                     # Numbers
                     elif (col == 0 and row == 1) or (col == 9 and row == 1):
-                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i1)
-                    elif (col == 0 and row == 2) or (col == 9 and row == 2):
-                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i2)
-                    elif (col == 0 and row == 3) or (col == 9 and row == 3):
-                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i3)
-                    elif (col == 0 and row == 4) or (col == 9 and row == 4):
-                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i4)
-                    elif (col == 0 and row == 5) or (col == 9 and row == 5):
-                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i5)
-                    elif (col == 0 and row == 6) or (col == 9 and row == 6):
-                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i6)
-                    elif (col == 0 and row == 7) or (col == 9 and row == 7):
-                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i7)
-                    elif (col == 0 and row == 8) or (col == 9 and row == 8):
                         canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i8)
+                    elif (col == 0 and row == 2) or (col == 9 and row == 2):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i7)
+                    elif (col == 0 and row == 3) or (col == 9 and row == 3):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i6)
+                    elif (col == 0 and row == 4) or (col == 9 and row == 4):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i5)
+                    elif (col == 0 and row == 5) or (col == 9 and row == 5):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i4)
+                    elif (col == 0 and row == 6) or (col == 9 and row == 6):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i3)
+                    elif (col == 0 and row == 7) or (col == 9 and row == 7):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i2)
+                    elif (col == 0 and row == 8) or (col == 9 and row == 8):
+                        canvas.create_image(x0 + 16, y0 + 16, anchor=NW, image=self.i1)
 
                 else:
                     canvas.create_rectangle((x0, y0, x1, y1), fill=self.color)
@@ -97,11 +103,14 @@ class Board:
             else:
                 self.color = "#815426"
 
+        print(self.board_initial)
+
 
 class Pieces:
-    def __init__(self, height, width):
+    def __init__(self, height, width, name=None):
         self.height = height
         self.width = width
+        self.name = name
         self.w_rook = tk.PhotoImage(file="img/w_rook.png")
         self.b_rook = tk.PhotoImage(file="img/b_rook.png")
         self.w_knight = tk.PhotoImage(file="img/w_knight.png")
@@ -115,13 +124,11 @@ class Pieces:
         self.w_pawn = tk.PhotoImage(file="img/w_pawn.png")
         self.b_pawn = tk.PhotoImage(file="img/b_pawn.png")
         self.image = tk.PhotoImage(file="img/w_pawn.png")
+        self.piece_matrix = board
 
     def install_in(self, canvas):
         """Création de chessboard."""
-        # x = 72
-        # y = 0
 
-        black_list = ["b_rook", "b_knight", "b_bishop", "b_king", "b_queen", "b_pawn"]
         for row in range(8):
             y = (SIZE * (row + 1)) + 8
             for col in range(8):
@@ -151,9 +158,15 @@ class Pieces:
                     canvas.create_image(x, y, anchor=NW, image=self.w_queen)
                 elif row == 7 and col == 4:
                     canvas.create_image(x, y, anchor=NW, image=self.w_king)
-
+            # reset position x,y
             x = 0
             y = 0
+
+        # print(self.piece_matrix)
+
+
+class Pawn(Pieces):
+    pass
 
 
 # #****************************************************************
@@ -171,6 +184,30 @@ class Game:
         self.board = Board(width, height)
         self.pieces = Pieces(width, height)
 
+        # self.w = tk.Label(self.frame, text="Hello Tkinter!")
+        # self.w.place(x=800, y=100)
+        # self.w.pack()
+        # self.displayturn1 = tk.Label(self.frame, font=("Their turn", 30))
+        # self.displayturn1.place(x=800, y=200)
+        # self.displayturn2 = tk.Label(self.frame, font=("Your turn", 15))
+        # self.displayturn2.place(x=800, y=200)
+        # #
+        #
+        # # TextBox Creation
+        # self.inputtxt = tk.Text(self.frame, height=5, width=850)
+        #
+        # self.inputtxt.pack()
+        #
+        # # Button Creation
+        # self.printButton = tk.Button(
+        #     self.frame, text="Print", command=self.printInput()
+        # )
+        # self.printButton.pack()
+        #
+        # # Label Creation
+        # self.lbl = tk.Label(self.frame, text="")
+        # self.lbl.pack()
+
     def start(self):
         """Commencer à créer défender, aliens, bunkers."""
         self.canvas.create_image(0, 0, image=self.ecran, tags="image", anchor="nw")
@@ -178,14 +215,13 @@ class Game:
 
         self.pieces.install_in(self.canvas)
 
-        img = PhotoImage(file="img/b_bishop.png")
-
-        # Add image to the Canvas Items
-        self.canvas.create_image(10, 10, anchor=NW, image=img)
-
     def start_animation(self):
         """Appeler la création des bases au méthode start()."""
         self.start()
+
+    def printInput(self):
+        inp = self.inputtxt.get(1.0, "end-1c")
+        # self.lbl.config(text="Provided Input: " + inp)
 
 
 class Chess:
@@ -197,11 +233,14 @@ class Chess:
         self.root.title("Chess game")
         self.frame = tk.Frame(self.root, width=1024, height=1024)
         self.frame.pack()
+        # self.w = tk.Label(self.frame, text="Hello Tkinter!")
+        # self.w.place(x=800, y=100)
+        # self.w.pack()
+
         # self.root.mainloop()
 
         self.game = Game(self.frame)
 
-    #
     def play(self):
         """Méthode pour commmencer le jeu."""
         self.game.start_animation()
