@@ -103,7 +103,7 @@ class Board:
             else:
                 self.color = "#815426"
 
-        print(self.board_initial)
+        # print(self.board_initial)
 
 
 class Pieces:
@@ -184,17 +184,25 @@ class Game:
         self.board = Board(width, height)
         self.pieces = Pieces(width, height)
 
-        # self.w = tk.Label(self.frame, text="Hello Tkinter!")
-        # self.w.place(x=800, y=100)
-        # self.w.pack()
-        # self.displayturn1 = tk.Label(self.frame, font=("Their turn", 30))
-        # self.displayturn1.place(x=800, y=200)
-        # self.displayturn2 = tk.Label(self.frame, font=("Your turn", 15))
-        # self.displayturn2.place(x=800, y=200)
-        # #
-        #
+        self.displayturn1 = tk.Label(self.frame, text="Their turn", font=("Arial", 25))
+        self.displayturn1.place(x=700, y=100)
+        self.displayturn2 = tk.Label(self.frame, text="Your turn", font=("Arial", 25))
+        self.displayturn2.place(x=700, y=200)
+
         # # TextBox Creation
-        # self.inputtxt = tk.Text(self.frame, height=5, width=850)
+        self.player1_input1 = tk.Entry(self.frame, font=("Arial", 18)).place(
+            x=700, y=150, height=30, width=100
+        )
+        self.player1_input2 = tk.Entry(self.frame, font=("Arial", 18)).place(
+            x=850, y=150, height=30, width=100
+        )
+
+        self.player2_input1 = tk.Entry(self.frame, font=("Arial", 18)).place(
+            x=700, y=250, height=30, width=100
+        )
+        self.player2_input2 = tk.Entry(self.frame, font=("Arial", 18)).place(
+            x=850, y=250, height=30, width=100
+        )
         #
         # self.inputtxt.pack()
         #
