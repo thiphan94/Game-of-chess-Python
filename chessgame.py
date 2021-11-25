@@ -188,7 +188,7 @@ class Pieces:
         canvas.delete(self.piece_list[1][0])
 
 
-class Pawn(Pieces):
+class Pawn:
     pass
 
 
@@ -228,9 +228,8 @@ class Game:
         self.player_input1 = tk.Entry(self.frame, font=("Arial", 18))
         self.player_input1.place(x=100, y=750, height=30, width=100)
 
-        self.player_input2 = tk.Entry(self.frame, font=("Arial", 18)).place(
-            x=300, y=750, height=30, width=100
-        )
+        self.player_input2 = tk.Entry(self.frame, font=("Arial", 18))
+        self.player_input2.place(x=300, y=750, height=30, width=100)
 
         # Button Creation
         self.btn = tk.Button(
@@ -251,9 +250,11 @@ class Game:
         self.start()
 
     def get_move(self):
-        inp = self.player_input1.get()
+        value_from = self.player_input1.get()
+        value_to = self.player_input2.get()
+
         # print(inp)
-        self.lbl.config(text="Provided Input: " + inp)
+        self.lbl.config(text="Provided Input: " + value_from)
         self.lbl.place(x=450, y=900, height=30, width=100)
 
 
