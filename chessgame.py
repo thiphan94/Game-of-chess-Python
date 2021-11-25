@@ -5,7 +5,8 @@ import math
 import random
 import json
 import operator
-import pygame
+
+# import pygame
 from matrix import board, coordination, board_coordination
 
 try:
@@ -124,45 +125,64 @@ class Pieces:
         self.w_pawn = tk.PhotoImage(file="img/w_pawn.png")
         self.b_pawn = tk.PhotoImage(file="img/b_pawn.png")
         self.image = tk.PhotoImage(file="img/w_pawn.png")
-        self.piece_matrix = board
+        self.piece_list = []
+        self.id = None
 
     def install_in(self, canvas):
         """Création de chessboard."""
 
         for row in range(8):
             y = (SIZE * (row + 1)) + 8
+            new = []
             for col in range(8):
                 x = (SIZE * (col + 1)) + 8
 
                 if row == 1:
-                    canvas.create_image(x, y, anchor=NW, image=self.b_pawn)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_pawn)
+                    new.append(self.id)
                 elif row == 6:
-                    canvas.create_image(x, y, anchor=NW, image=self.w_pawn)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_pawn)
+                    new.append(self.id)
                 elif (row == 0 and col == 0) or (row == 0 and col == 7):
-                    canvas.create_image(x, y, anchor=NW, image=self.b_rook)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_rook)
+                    new.append(self.id)
                 elif (row == 0 and col == 1) or (row == 0 and col == 6):
-                    canvas.create_image(x, y, anchor=NW, image=self.b_knight)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_knight)
+                    new.append(self.id)
                 elif (row == 0 and col == 2) or (row == 0 and col == 5):
-                    canvas.create_image(x, y, anchor=NW, image=self.b_bishop)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_bishop)
+                    new.append(self.id)
                 elif row == 0 and col == 3:
-                    canvas.create_image(x, y, anchor=NW, image=self.b_queen)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_queen)
+                    new.append(self.id)
                 elif row == 0 and col == 4:
-                    canvas.create_image(x, y, anchor=NW, image=self.b_king)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_king)
                 elif (row == 7 and col == 0) or (row == 7 and col == 7):
-                    canvas.create_image(x, y, anchor=NW, image=self.w_rook)
+                    new.append(self.id)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_rook)
+                    new.append(self.id)
                 elif (row == 7 and col == 1) or (row == 7 and col == 6):
-                    canvas.create_image(x, y, anchor=NW, image=self.w_knight)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_knight)
+                    new.append(self.id)
                 elif (row == 7 and col == 2) or (row == 7 and col == 5):
                     canvas.create_image(x, y, anchor=NW, image=self.w_bishop)
+                    new.append(self.id)
                 elif row == 7 and col == 3:
                     canvas.create_image(x, y, anchor=NW, image=self.w_queen)
+                    new.append(self.id)
                 elif row == 7 and col == 4:
                     canvas.create_image(x, y, anchor=NW, image=self.w_king)
+                    new.append(self.id)
             # reset position x,y
             x = 0
             y = 0
+            self.piece_list.append(new)
 
+        print(self.piece_list)
         # print(self.piece_matrix)
+
+    def remove(self, canvas):
+        canvas.delete(self.piece_list[1][0])
 
 
 class Pawn(Pieces):
@@ -230,6 +250,7 @@ class Game:
         self.board.install_in(self.canvas)
 
         self.pieces.install_in(self.canvas)
+        # self.pieces.remove(self.canvas)
 
     def start_animation(self):
         """Appeler la création des bases au méthode start()."""
