@@ -201,15 +201,17 @@ class Game:
         width = 1024
         height = 1024
         self.frame = frame
+        self.turn = "White"
         self.canvas = tk.Canvas(self.frame, width=width, height=height)
         self.canvas.pack(side="top", fill="both", expand=True)
         self.ecran = tk.PhotoImage(file="w2.png")
         self.board = Board(width, height)
         self.pieces = Pieces(width, height)
+        self.lbl = tk.Label(self.frame, text="")
+        self.displayturn1 = tk.Label(
+            self.frame, text="Turn of {0}".format(self.turn), font=("Arial", 25)
+        ).place(x=720, y=100)
 
-        # self.displayturn1 = tk.Label(
-        #     self.frame, text="Their turn", font=("Arial", 25)
-        # ).place(x=720, y=100)
         self.displayturn2 = tk.Label(
             self.frame, text="Please chose your piece!", font=("Arial", 25)
         ).place(x=100, y=680)
@@ -217,36 +219,22 @@ class Game:
         self.from_label = tk.Label(self.frame, text="From", font=("Arial", 15)).place(
             x=30, y=750
         )
-        # self.from_label2 = tk.Label(self.frame, text="From", font=("Arial", 15)).place(
-        #     x=650, y=250
-        # )
 
         self.to_label = tk.Label(self.frame, text="To", font=("Arial", 15)).place(
             x=250, y=750
         )
-        # self.to_label2 = tk.Label(self.frame, text="To", font=("Arial", 15)).place(
-        #     x=860, y=250
-        # )
+
         # # TextBox Creation
-        self.player_input1 = tk.Entry(self.frame, font=("Arial", 18)).place(
-            x=100, y=750, height=30, width=100
-        )  # self.to_label2 = tk.Label(self.frame, text="To", font=("Arial", 15)).place(
-        #     x=860, y=250
-        # )
+        self.player_input1 = tk.Entry(self.frame, font=("Arial", 18))
+        self.player_input1.place(x=100, y=750, height=30, width=100)
+
         self.player_input2 = tk.Entry(self.frame, font=("Arial", 18)).place(
             x=300, y=750, height=30, width=100
         )
-        #
-        # self.player2_input1 = tk.Entry(self.frame, font=("Arial", 18)).place(
-        #     x=720, y=250, height=30, width=100
-        # )
-        # self.player2_input2 = tk.Entry(self.frame, font=("Arial", 18)).place(
-        #     x=900, y=250, height=30, width=100
-        # )
 
         # Button Creation
         self.btn = tk.Button(
-            self.frame, text="Ok", font=("Arial", 15), command=self.printInput()
+            self.frame, text="Ok", font=("Arial", 15), command=lambda: self.get_move()
         ).place(x=450, y=750, height=30, width=100)
 
     def start(self):
@@ -262,10 +250,11 @@ class Game:
         """Appeler la création des bases au méthode start()."""
         self.start()
 
-    def printInput(self):
-        # inp = self.inputtxt.get(1.0, "end-1c")
-        # self.lbl.config(text="Provided Input: " + inp)
-        pass
+    def get_move(self):
+        inp = self.player_input1.get()
+        # print(inp)
+        self.lbl.config(text="Provided Input: " + inp)
+        self.lbl.place(x=450, y=900, height=30, width=100)
 
 
 class Chess:
