@@ -43,7 +43,8 @@ class Board:
         self.i7 = tk.PhotoImage(file="img/7.png")
         self.i8 = tk.PhotoImage(file="img/8.png")
         # chessboard initial
-        self.board_initial = board_coordination
+        self.piece_list = []
+        self.id = None
 
     def install_in(self, canvas):
         """Création de chessboard."""
@@ -106,31 +107,9 @@ class Board:
 
         # print(self.board_initial)
 
-
-class Pieces:
-    def __init__(self, height, width, name=None):
-        self.height = height
-        self.width = width
-        self.name = name
-        self.w_rook = tk.PhotoImage(file="img/w_rook.png")
-        self.b_rook = tk.PhotoImage(file="img/b_rook.png")
-        self.w_knight = tk.PhotoImage(file="img/w_knight.png")
-        self.b_knight = tk.PhotoImage(file="img/b_knight.png")
-        self.w_bishop = tk.PhotoImage(file="img/w_bishop.png")
-        self.b_bishop = tk.PhotoImage(file="img/b_bishop.png")
-        self.w_king = tk.PhotoImage(file="img/w_king.png")
-        self.b_king = tk.PhotoImage(file="img/b_king.png")
-        self.w_queen = tk.PhotoImage(file="img/w_queen.png")
-        self.b_queen = tk.PhotoImage(file="img/b_queen.png")
-        self.w_pawn = tk.PhotoImage(file="img/w_pawn.png")
-        self.b_pawn = tk.PhotoImage(file="img/b_pawn.png")
-        self.image = tk.PhotoImage(file="img/w_pawn.png")
-        self.piece_list = []
-        self.id = None
-
-    def install_in(self, canvas):
-        """Création de chessboard."""
-
+    def install_pieces(self, canvas):
+        """set up pieces."""
+        # canvas.create_image(0, 0, anchor=NW, image=self.w_pawn)
         for row in range(8):
             y = (SIZE * (row + 1)) + 8
             new = []
@@ -138,40 +117,41 @@ class Pieces:
                 x = (SIZE * (col + 1)) + 8
 
                 if row == 1:
-                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_pawn)
+                    # canvas.create_image(x, y, anchor=NW, image=self.w_pawn)
+                    self.id = Pawn("black", "pawn", canvas, x, y)
                     new.append(self.id)
                 elif row == 6:
-                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_pawn)
+                    self.id = Pawn("white", "pawn", canvas, x, y)
                     new.append(self.id)
                 elif (row == 0 and col == 0) or (row == 0 and col == 7):
-                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_rook)
+                    self.id = Rook("black", "rook", canvas, x, y)
                     new.append(self.id)
                 elif (row == 0 and col == 1) or (row == 0 and col == 6):
-                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_knight)
+                    self.id = Knight("black", "knight", canvas, x, y)
                     new.append(self.id)
                 elif (row == 0 and col == 2) or (row == 0 and col == 5):
-                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_bishop)
+                    self.id = Bishop("black", "bishop", canvas, x, y)
                     new.append(self.id)
                 elif row == 0 and col == 3:
-                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_queen)
+                    self.id = Queen("black", "queen", canvas, x, y)
                     new.append(self.id)
                 elif row == 0 and col == 4:
-                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_king)
-                elif (row == 7 and col == 0) or (row == 7 and col == 7):
+                    self.id = King("black", "king", canvas, x, y)
                     new.append(self.id)
-                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_rook)
+                elif (row == 7 and col == 0) or (row == 7 and col == 7):
+                    self.id = Rook("white", "rook", canvas, x, y)
                     new.append(self.id)
                 elif (row == 7 and col == 1) or (row == 7 and col == 6):
-                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_knight)
+                    self.id = Knight("white", "knight", canvas, x, y)
                     new.append(self.id)
                 elif (row == 7 and col == 2) or (row == 7 and col == 5):
-                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_bishop)
+                    self.id = Bishop("white", "bishop", canvas, x, y)
                     new.append(self.id)
                 elif row == 7 and col == 3:
-                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_queen)
+                    self.id = Queen("white", "queen", canvas, x, y)
                     new.append(self.id)
                 elif row == 7 and col == 4:
-                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_king)
+                    self.id = King("white", "king", canvas, x, y)
                     new.append(self.id)
                 else:
                     new.append("Empty")
@@ -180,16 +160,90 @@ class Pieces:
             x = 0
             y = 0
             self.piece_list.append(new)
-
+        #
         print(self.piece_list)
-        # print(self.piece_matrix)
 
     def remove(self, canvas):
         canvas.delete(self.piece_list[1][0])
 
 
-class Pawn:
-    pass
+class Piece:
+    def __init__(self, color, type, canvas):
+        # self.height = height
+        # self.width = width
+        self.color = color
+        self.type = type
+        self.canvas = canvas
+
+
+class Pawn(Piece):
+    def __init__(self, color, type, canvas, x, y):
+        super().__init__(color, type, canvas)
+        if color == "white":
+            file_name = "img/" + "w_" + type + ".png"
+        else:
+            file_name = "img/" + "b_" + type + ".png"
+        self.title = tk.PhotoImage(file=file_name)
+        canvas.create_image(x, y, anchor=NW, image=self.title)
+
+
+class Rook(Piece):
+    def __init__(self, color, type, canvas, x, y):
+        super().__init__(color, type, canvas)
+        if color == "white":
+            file_name = "img/" + "w_" + type + ".png"
+        else:
+            file_name = "img/" + "b_" + type + ".png"
+        # print(file_name)
+        self.title = tk.PhotoImage(file=file_name)
+        canvas.create_image(x, y, anchor=NW, image=self.title)
+
+
+class Knight(Piece):
+    def __init__(self, color, type, canvas, x, y):
+        super().__init__(color, type, canvas)
+        if color == "white":
+            file_name = "img/" + "w_" + type + ".png"
+        else:
+            file_name = "img/" + "b_" + type + ".png"
+        # print(file_name)
+        self.title = tk.PhotoImage(file=file_name)
+        canvas.create_image(x, y, anchor=NW, image=self.title)
+
+
+class Bishop(Piece):
+    def __init__(self, color, type, canvas, x, y):
+        super().__init__(color, type, canvas)
+        if color == "white":
+            file_name = "img/" + "w_" + type + ".png"
+        else:
+            file_name = "img/" + "b_" + type + ".png"
+        # print(file_name)
+        self.title = tk.PhotoImage(file=file_name)
+        canvas.create_image(x, y, anchor=NW, image=self.title)
+
+
+class Queen(Piece):
+    def __init__(self, color, type, canvas, x, y):
+        super().__init__(color, type, canvas)
+        if color == "white":
+            file_name = "img/" + "w_" + type + ".png"
+        else:
+            file_name = "img/" + "b_" + type + ".png"
+        # print(file_name)
+        self.title = tk.PhotoImage(file=file_name)
+        canvas.create_image(x, y, anchor=NW, image=self.title)
+
+
+class King(Piece):
+    def __init__(self, color, type, canvas, x, y):
+        super().__init__(color, type, canvas)
+        if color == "white":
+            file_name = "img/" + "w_" + type + ".png"
+        else:
+            file_name = "img/" + "b_" + type + ".png"
+        self.title = tk.PhotoImage(file=file_name)
+        canvas.create_image(x, y, anchor=NW, image=self.title)
 
 
 # #****************************************************************
@@ -206,7 +260,8 @@ class Game:
         self.canvas.pack(side="top", fill="both", expand=True)
         self.ecran = tk.PhotoImage(file="w2.png")
         self.board = Board(width, height)
-        self.pieces = Pieces(width, height)
+        # self.pieces = Pieces(width, height)
+
         self.lbl = tk.Label(self.frame, text="")
         self.displayturn1 = tk.Label(
             self.frame, text="Turn of {0}".format(self.turn), font=("Arial", 25)
@@ -241,8 +296,9 @@ class Game:
         self.canvas.create_image(0, 0, image=self.ecran, tags="image", anchor="nw")
 
         self.board.install_in(self.canvas)
+        self.board.install_pieces(self.canvas)
 
-        self.pieces.install_in(self.canvas)
+        # self.pieces.install_in(self.canvas)
         # self.pieces.remove(self.canvas)
 
     def start_animation(self):
@@ -254,7 +310,7 @@ class Game:
         value_to = self.player_input2.get()
 
         # print(inp)
-        self.lbl.config(text="Provided Input: " + value_from)
+        self.lbl.config(text="Provided Input: " + value_from + value_to)
         self.lbl.place(x=450, y=900, height=30, width=100)
 
 
