@@ -165,14 +165,17 @@ class Pieces:
                     self.id = canvas.create_image(x, y, anchor=NW, image=self.w_knight)
                     new.append(self.id)
                 elif (row == 7 and col == 2) or (row == 7 and col == 5):
-                    canvas.create_image(x, y, anchor=NW, image=self.w_bishop)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_bishop)
                     new.append(self.id)
                 elif row == 7 and col == 3:
-                    canvas.create_image(x, y, anchor=NW, image=self.w_queen)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_queen)
                     new.append(self.id)
                 elif row == 7 and col == 4:
-                    canvas.create_image(x, y, anchor=NW, image=self.w_king)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_king)
                     new.append(self.id)
+                else:
+                    new.append("Empty")
+
             # reset position x,y
             x = 0
             y = 0
@@ -204,49 +207,52 @@ class Game:
         self.board = Board(width, height)
         self.pieces = Pieces(width, height)
 
-        self.displayturn1 = tk.Label(
-            self.frame, text="Their turn", font=("Arial", 25)
-        ).place(x=720, y=100)
+        # self.displayturn1 = tk.Label(
+        #     self.frame, text="Their turn", font=("Arial", 25)
+        # ).place(x=720, y=100)
         self.displayturn2 = tk.Label(
-            self.frame, text="Your turn", font=("Arial", 25)
-        ).place(x=720, y=200)
+            self.frame, text="Please chose your piece!", font=("Arial", 25)
+        ).place(x=100, y=680)
 
-        self.from_label1 = tk.Label(self.frame, text="From", font=("Arial", 15)).place(
-            x=650, y=150
+        self.from_label = tk.Label(self.frame, text="From", font=("Arial", 15)).place(
+            x=30, y=750
         )
-        self.from_label2 = tk.Label(self.frame, text="From", font=("Arial", 15)).place(
-            x=650, y=250
-        )
+        # self.from_label2 = tk.Label(self.frame, text="From", font=("Arial", 15)).place(
+        #     x=650, y=250
+        # )
 
-        self.to_label1 = tk.Label(self.frame, text="To", font=("Arial", 15)).place(
-            x=860, y=150
+        self.to_label = tk.Label(self.frame, text="To", font=("Arial", 15)).place(
+            x=250, y=750
         )
-        self.to_label2 = tk.Label(self.frame, text="To", font=("Arial", 15)).place(
-            x=860, y=250
-        )
+        # self.to_label2 = tk.Label(self.frame, text="To", font=("Arial", 15)).place(
+        #     x=860, y=250
+        # )
         # # TextBox Creation
-        self.player1_input1 = tk.Entry(self.frame, font=("Arial", 18)).place(
-            x=720, y=150, height=30, width=100
+        self.player_input1 = tk.Entry(self.frame, font=("Arial", 18)).place(
+            x=100, y=750, height=30, width=100
+        )  # self.to_label2 = tk.Label(self.frame, text="To", font=("Arial", 15)).place(
+        #     x=860, y=250
+        # )
+        self.player_input2 = tk.Entry(self.frame, font=("Arial", 18)).place(
+            x=300, y=750, height=30, width=100
         )
-        self.player1_input2 = tk.Entry(self.frame, font=("Arial", 18)).place(
-            x=900, y=150, height=30, width=100
-        )
-
-        self.player2_input1 = tk.Entry(self.frame, font=("Arial", 18)).place(
-            x=720, y=250, height=30, width=100
-        )
-        self.player2_input2 = tk.Entry(self.frame, font=("Arial", 18)).place(
-            x=900, y=250, height=30, width=100
-        )
+        #
+        # self.player2_input1 = tk.Entry(self.frame, font=("Arial", 18)).place(
+        #     x=720, y=250, height=30, width=100
+        # )
+        # self.player2_input2 = tk.Entry(self.frame, font=("Arial", 18)).place(
+        #     x=900, y=250, height=30, width=100
+        # )
 
         # Button Creation
         self.btn = tk.Button(
             self.frame, text="Ok", font=("Arial", 15), command=self.printInput()
-        ).place(x=720, y=300, height=30, width=100)
+        ).place(x=450, y=750, height=30, width=100)
 
     def start(self):
         """Commencer à créer défender, aliens, bunkers."""
         self.canvas.create_image(0, 0, image=self.ecran, tags="image", anchor="nw")
+
         self.board.install_in(self.canvas)
 
         self.pieces.install_in(self.canvas)
