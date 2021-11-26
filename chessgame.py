@@ -43,11 +43,32 @@ class Board:
         self.i6 = tk.PhotoImage(file="img/6.png")
         self.i7 = tk.PhotoImage(file="img/7.png")
         self.i8 = tk.PhotoImage(file="img/8.png")
-        # chessboard initial
-        self.piece_list = []
+
+        self.w_rook = tk.PhotoImage(file="img/w_rook.png")
+        self.b_rook = tk.PhotoImage(file="img/b_rook.png")
+        self.w_knight = tk.PhotoImage(file="img/w_knight.png")
+        self.b_knight = tk.PhotoImage(file="img/b_knight.png")
+        self.w_bishop = tk.PhotoImage(file="img/w_bishop.png")
+        self.b_bishop = tk.PhotoImage(file="img/b_bishop.png")
+        self.w_king = tk.PhotoImage(file="img/w_king.png")
+        self.b_king = tk.PhotoImage(file="img/b_king.png")
+        self.w_queen = tk.PhotoImage(file="img/w_queen.png")
+        self.b_queen = tk.PhotoImage(file="img/b_queen.png")
+        self.w_pawn = tk.PhotoImage(file="img/w_pawn.png")
+        self.b_pawn = tk.PhotoImage(file="img/b_pawn.png")
+        self.image = tk.PhotoImage(file="img/w_pawn.png")
+        # list for stockage pieces
+        self.piece_list = [
+            [Piece("none", "empty") for col in range(8)] for row in range(8)
+        ]
+        self.images_list = [[[None] for col in range(8)] for row in range(8)]
+
         self.id = None
         self.coordination = coordination
         self.b_name = board_name
+
+        self.create_list()
+        # self.image = tk.PhotoImage(file="img/b_pawn.png")
 
     def install_in(self, canvas):
         """Création de chessboard."""
@@ -110,59 +131,91 @@ class Board:
 
         # print(self.board_initial)
 
+    def create_list(self):
+        for row in range(8):
+            for col in range(8):
+
+                if row == 1:
+                    self.piece_list[row][col] = Piece("black", "pawn")
+                elif row == 6:
+                    self.piece_list[row][col] = Piece("white", "pawn")
+                elif (row == 0 and col == 0) or (row == 0 and col == 7):
+                    self.piece_list[row][col] = Piece("black", "rook")
+                elif (row == 0 and col == 1) or (row == 0 and col == 6):
+                    self.piece_list[row][col] = Piece("black", "knight")
+                elif (row == 0 and col == 2) or (row == 0 and col == 5):
+                    self.piece_list[row][col] = Piece("black", "bishop")
+                elif row == 0 and col == 3:
+                    self.piece_list[row][col] = Piece("black", "queen")
+                elif row == 0 and col == 4:
+                    self.piece_list[row][col] = Piece("black", "king")
+                elif (row == 7 and col == 0) or (row == 7 and col == 7):
+                    self.piece_list[row][col] = Piece("white", "rook")
+                elif (row == 7 and col == 1) or (row == 7 and col == 6):
+                    self.piece_list[row][col] = Piece("white", "knight")
+                elif (row == 7 and col == 2) or (row == 7 and col == 5):
+                    self.piece_list[row][col] = Piece("white", "bishop")
+                elif row == 7 and col == 3:
+                    self.piece_list[row][col] = Piece("white", "queen")
+                elif row == 7 and col == 4:
+                    self.piece_list[row][col] = Piece("white", "king")
+                else:
+                    self.piece_list[row][col] = Piece("none", "empty")
+
     def install_pieces(self, canvas):
         """set up pieces."""
         # canvas.create_image(0, 0, anchor=NW, image=self.w_pawn)
+        self.images = list()
         for row in range(8):
             y = (SIZE * (row + 1)) + 8
             new = []
             for col in range(8):
                 x = (SIZE * (col + 1)) + 8
-
                 if row == 1:
-                    # canvas.create_image(x, y, anchor=NW, image=self.w_pawn)
-                    self.id = Piece("black", "pawn", canvas, x, y)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_pawn)
                     new.append(self.id)
                 elif row == 6:
-                    self.id = Piece("white", "pawn", canvas, x, y)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_pawn)
                     new.append(self.id)
                 elif (row == 0 and col == 0) or (row == 0 and col == 7):
-                    self.id = Piece("black", "rook", canvas, x, y)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_rook)
                     new.append(self.id)
                 elif (row == 0 and col == 1) or (row == 0 and col == 6):
-                    self.id = Piece("black", "knight", canvas, x, y)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_knight)
                     new.append(self.id)
                 elif (row == 0 and col == 2) or (row == 0 and col == 5):
-                    self.id = Piece("black", "bishop", canvas, x, y)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_bishop)
                     new.append(self.id)
                 elif row == 0 and col == 3:
-                    self.id = Piece("black", "queen", canvas, x, y)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_queen)
                     new.append(self.id)
                 elif row == 0 and col == 4:
-                    self.id = Piece("black", "king", canvas, x, y)
-                    new.append(self.id)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.b_king)
                 elif (row == 7 and col == 0) or (row == 7 and col == 7):
-                    self.id = Piece("white", "rook", canvas, x, y)
+                    new.append(self.id)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_rook)
                     new.append(self.id)
                 elif (row == 7 and col == 1) or (row == 7 and col == 6):
-                    self.id = Piece("white", "knight", canvas, x, y)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_knight)
                     new.append(self.id)
                 elif (row == 7 and col == 2) or (row == 7 and col == 5):
-                    self.id = Piece("white", "bishop", canvas, x, y)
+                    canvas.create_image(x, y, anchor=NW, image=self.w_bishop)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_bishop)
                     new.append(self.id)
                 elif row == 7 and col == 3:
-                    self.id = Piece("white", "queen", canvas, x, y)
+                    canvas.create_image(x, y, anchor=NW, image=self.w_queen)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_queen)
                     new.append(self.id)
                 elif row == 7 and col == 4:
-                    self.id = Piece("white", "king", canvas, x, y)
+                    canvas.create_image(x, y, anchor=NW, image=self.w_king)
+                    self.id = canvas.create_image(x, y, anchor=NW, image=self.w_king)
                     new.append(self.id)
                 else:
                     new.append("Empty")
-
             # reset position x,y
             x = 0
             y = 0
-            self.piece_list.append(new)
+            self.images_list.append(new)
 
         # print(self.piece_list)
 
@@ -197,15 +250,16 @@ class Board:
 
 
 class Piece:
-    def __init__(self, color, type, canvas, x, y):
-        # super().__init__(color, type, canvas)
-        self.first_move = True
-        if color == "white":
-            file_name = "img/" + "w_" + type + ".png"
-        else:
-            file_name = "img/" + "b_" + type + ".png"
-        self.title = tk.PhotoImage(file=file_name)
-        canvas.create_image(x, y, anchor=NW, image=self.title)
+    def __init__(self, color, name):
+        self.color = color
+        self.name = name
+
+    # def set_image(self):
+    #     if self.color == "white":
+    #         file_name = "img/" + "w_" + self.name + ".png"
+    #     else:
+    #         file_name = "img/" + "b_" + self.name + ".png"
+    #     return file_name
 
     def returnType(self):
         return self.type
