@@ -7,7 +7,7 @@ import json
 import operator
 import numpy as np
 
-# import pygame
+
 from matrix import board_name, coordination, board_coordination
 
 try:
@@ -17,8 +17,6 @@ except ImportError:
 
 SIZE = 64
 from tkinter import *
-
-# list(zip(board, coordination))
 
 
 class Board:
@@ -232,10 +230,18 @@ class Board:
         self.old_color = self.piece_list[old_row][old_col].return_color()
         self.new_color = self.piece_list[new_row][new_col].return_color()
 
-        print(self.old_color, self.old_name)
-        print(self.new_color, self.new_name)
+        # print(self.old_color, self.old_name)
+        # print(self.new_color, self.new_name)
 
-        # pass
+        # check if your turn
+        if (self.turn == 0 and self.old_color == "black") or (
+            self.turn == 1 and self.old_color == "white"
+        ):
+            return False
+
+        # check if you attack your team
+        if self.old_color == self.new_color:
+            return False
 
 
 # class Piece:
@@ -385,7 +391,7 @@ class Game:
         """Appeler la création des bases au méthode start()."""
         self.start()
 
-    def find(self, element, matrix):
+    def find_indexcase(self, element, matrix):
         for i in range(len(matrix)):
             for j in range(len(matrix[i])):
                 if matrix[i][j] == element:
@@ -397,8 +403,12 @@ class Game:
         self.lbl.config(text="Provided Input: " + self.value_from + self.value_to)
         self.lbl.place(x=450, y=900, height=30, width=100)
 
-        self.old_row, self.old_col = self.find(self.value_from, self.coordination)
-        self.new_row, self.new_col = self.find(self.value_to, self.coordination)
+        self.old_row, self.old_col = self.find_indexcase(
+            self.value_from, self.coordination
+        )
+        self.new_row, self.new_col = self.find_indexcase(
+            self.value_to, self.coordination
+        )
 
         self.board.check_legal(self.old_row, self.old_col, self.new_row, self.new_col)
 
