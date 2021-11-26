@@ -1,12 +1,12 @@
-board = [
-    ["br", "bk", "bb", "bq", "bk", "bb", "bk", "br"],
+board_name = [
+    ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"],
     ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
     ["no", "no", "no", "no", "no", "no", "no", "no"],
     ["no", "no", "no", "no", "no", "no", "no", "no"],
     ["no", "no", "no", "no", "no", "no", "no", "no"],
     ["no", "no", "no", "no", "no", "no", "no", "no"],
     ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
-    ["wr", "wk", "wb", "wq", "wk", "wb", "wk", "wr"],
+    ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"],
 ]
 
 
@@ -21,6 +21,7 @@ coordination = [
     ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1"],
 ]
 
+board_dict = {"br": "A8", "bn": "B8", "bb": "C8", "bq": "D8", "bk": "E8", "br": "H8"}
 board_coordination = [
     [
         ("br", "A8"),

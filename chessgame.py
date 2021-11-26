@@ -225,17 +225,15 @@ class Board:
     def reset(self, canvas):
         pass
 
-    def check_legal(self, value_from, value_to):
-        old_col, old_row = np.where(np.array(self.coordination) == value_from)
-        print(self.b_name[int(old_col)][int(old_row)])
-        new_col, new_row = np.where(np.array(self.coordination) == value_to)
-        print(self.b_name[int(new_col)][int(new_row)])
+    def check_legal(self, old_row, old_col, new_row, new_col):
+        print(old_row, old_col, new_row, new_col)
+        self.old_name = self.piece_list[old_row][old_col].return_name()
+        self.new_name = self.piece_list[new_row][new_col].return_name()
+        self.old_color = self.piece_list[old_row][old_col].return_color()
+        self.new_color = self.piece_list[new_row][new_col].return_color()
 
-        self.pType = self.piece_list[old_row][old_col].returnType()
-        self.nType = self.piece_list[new_row][new_col].returnType()
-        self.pColor = np.array(self.piece_list)[old_row][old_col].returnColor()
-        self.nColor = self.piece_list[new_row][new_col].returnColor()
-        print(self.pColor)
+        print(self.old_color, self.old_name)
+        print(self.new_color, self.new_name)
 
         # pass
 
@@ -261,10 +259,10 @@ class Piece:
     #         file_name = "img/" + "b_" + self.name + ".png"
     #     return file_name
 
-    def returnType(self):
-        return self.type
+    def return_name(self):
+        return self.name
 
-    def returnColor(self):
+    def return_color(self):
         return self.color
 
 
@@ -387,13 +385,22 @@ class Game:
         """Appeler la création des bases au méthode start()."""
         self.start()
 
+    def find(self, element, matrix):
+        for i in range(len(matrix)):
+            for j in range(len(matrix[i])):
+                if matrix[i][j] == element:
+                    return i, j
+
     def get_move(self):
-        value_from = self.player_input1.get()
-        value_to = self.player_input2.get()
-        self.lbl.config(text="Provided Input: " + value_from + value_to)
+        self.value_from = self.player_input1.get()
+        self.value_to = self.player_input2.get()
+        self.lbl.config(text="Provided Input: " + self.value_from + self.value_to)
         self.lbl.place(x=450, y=900, height=30, width=100)
 
-        self.board.check_legal(value_from, value_to)
+        self.old_row, self.old_col = self.find(self.value_from, self.coordination)
+        self.new_row, self.new_col = self.find(self.value_to, self.coordination)
+
+        self.board.check_legal(self.old_row, self.old_col, self.new_row, self.new_col)
 
 
 class Chess:
