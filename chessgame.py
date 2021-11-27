@@ -25,7 +25,7 @@ class Board:
         self.width = width
         self.color = color
         self.turn = 0
-        self.first_move = 1
+
         self.a = tk.PhotoImage(file="img/a.png")
         self.b = tk.PhotoImage(file="img/b.png")
         self.c = tk.PhotoImage(file="img/c.png")
@@ -225,6 +225,9 @@ class Board:
     def reset(self, canvas):
         pass
 
+    def check_general(self, old_color, old_name, new_color, new_name):
+        """check general case"""
+
     def check_legal(self, old_row, old_col, new_row, new_col):
         print(old_row, old_col, new_row, new_col)
         self.old_name = self.piece_list[old_row][old_col].return_name()
@@ -247,6 +250,9 @@ class Board:
         # check if you attack your team
         if self.old_color == self.new_color:
             return False
+        # else:
+        #     return True
+        # check general case
 
         if self.old_name == "pawn":
             if self.check_pawn(
@@ -259,6 +265,7 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
+
                 return True
 
     def check_pawn(
@@ -277,6 +284,7 @@ class Board:
                 if old_row == new_row + 1:
                     return True
                 if old_row == new_row + 2 and old_row == 6:
+                    print("ok")
                     return True
 
             elif new_name != "empty" and old_row == new_row + 1:
@@ -297,6 +305,9 @@ class Board:
                     return True
                 elif old_col == new_col + 1 or old_col == new_col - 1:
                     return True
+
+    def move(self, canvas):
+        canvas.move(self.images_list[7][0], 100, 100)
 
 
 # class Piece:
@@ -469,6 +480,9 @@ class Game:
             self.old_row, self.old_col, self.new_row, self.new_col
         ):
             print("ok")
+            self.board.move(self.canvas)
+        else:
+            print("invalid")
 
 
 class Chess:
