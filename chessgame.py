@@ -213,10 +213,19 @@ class Board:
             y = 0
             # self.images_list.append(new)
 
-    def move(self, canvas, old_row, old_col):
+    def change_turn(self):
+        if self.turn == 0:
+            self.turn = 1
+        else:
+            self.turn = 0
+
+    def remove(self, canvas, old_row, old_col, new_row, new_col, new_name):
         canvas.delete(self.images_list[old_row][old_col])
         self.images_list[old_row][old_col] = "None"
         self.pieces_list[old_row][old_col] = Piece("none", "empty")
+        if new_name != "empty":
+            canvas.delete(self.images_list[new_row][new_col])
+            self.images_list[new_row][new_col] = "None"
 
     def reset(self, canvas, old_color, old_name, new_row, new_col):
         if old_color == "white":
@@ -267,8 +276,17 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
-                self.move(canvas, old_row, old_col)
+                self.remove(
+                    canvas,
+                    old_row,
+                    old_col,
+                    new_row,
+                    new_col,
+                    self.new_name,
+                )
                 self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                self.change_turn()
+                print(self.turn)
                 return True
         elif self.old_name == "king":
             if self.check_king(
@@ -281,8 +299,17 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
-                self.move(canvas, old_row, old_col)
+                self.remove(
+                    canvas,
+                    old_row,
+                    old_col,
+                    new_row,
+                    new_col,
+                    self.new_name,
+                )
                 self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                self.change_turn()
+                print(self.turn)
                 return True
 
         elif self.old_name == "rook":
@@ -296,8 +323,17 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
-                self.move(canvas, old_row, old_col)
+                self.remove(
+                    canvas,
+                    old_row,
+                    old_col,
+                    new_row,
+                    new_col,
+                    self.new_name,
+                )
                 self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                self.change_turn()
+                print(self.turn)
                 return True
 
         elif self.old_name == "bishop":
@@ -311,8 +347,17 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
-                self.move(canvas, old_row, old_col)
+                self.remove(
+                    canvas,
+                    old_row,
+                    old_col,
+                    new_row,
+                    new_col,
+                    self.new_name,
+                )
                 self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                self.change_turn()
+                print(self.turn)
                 return True
 
         elif self.old_name == "queen":
@@ -335,8 +380,17 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
-                self.move(canvas, old_row, old_col)
+                self.remove(
+                    canvas,
+                    old_row,
+                    old_col,
+                    new_row,
+                    new_col,
+                    self.new_name,
+                )
                 self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                self.change_turn()
+                print(self.turn)
                 return True
         elif self.old_name == "knight":
             if self.check_knight(
@@ -349,8 +403,17 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
-                self.move(canvas, old_row, old_col)
+                self.remove(
+                    canvas,
+                    old_row,
+                    old_col,
+                    new_row,
+                    new_col,
+                    self.new_name,
+                )
                 self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                self.change_turn()
+                print(self.turn)
                 return True
 
         return False
@@ -371,7 +434,6 @@ class Board:
                 if old_row == new_row + 1:
                     return True
                 if old_row == new_row + 2 and old_row == 6:
-
                     return True
 
             elif new_name != "empty" and old_row == new_row + 1:
