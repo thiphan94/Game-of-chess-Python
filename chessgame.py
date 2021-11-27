@@ -15,6 +15,8 @@ try:
 except ImportError:
     import Tkinter as tk
 
+from tkinter import messagebox
+
 SIZE = 64
 from tkinter import *
 
@@ -65,7 +67,7 @@ class Board:
 
         self.id = None
         self.coordination = coordination
-        self.b_name = board_name
+        # self.b_name = board_name
 
         self.create_list()
         # self.image = tk.PhotoImage(file="img/b_pawn.png")
@@ -709,7 +711,7 @@ class Game:
         self.ecran = tk.PhotoImage(file="w2.png")
         self.board = Board(width, height)
         self.coordination = coordination
-        self.matrix = board_name
+        # self.matrix = board_name
         self.valid_case = valid_case
         self.lbl = tk.Label(self.frame, text="")
         self.displayturn1 = tk.Label(
@@ -765,23 +767,30 @@ class Game:
         self.value_to = self.player_input2.get().upper()
 
         print(self.value_from, self.value_to)
-        self.lbl.config(text="Provided Input: " + self.value_from + self.value_to)
-        self.lbl.place(x=450, y=900, height=30, width=100)
 
-        self.old_row, self.old_col = self.find_indexcase(
-            self.value_from, self.coordination
-        )
-        self.new_row, self.new_col = self.find_indexcase(
-            self.value_to, self.coordination
-        )
+        if (self.value_from in self.valid_case) and (self.value_to in self.valid_case):
 
-        if self.board.check_legal(
-            self.canvas, self.old_row, self.old_col, self.new_row, self.new_col
-        ):
-            print("ok")
+            self.lbl.config(text="Provided Input: " + self.value_from + self.value_to)
+            self.lbl.place(x=450, y=900, height=30, width=100)
 
+            self.old_row, self.old_col = self.find_indexcase(
+                self.value_from, self.coordination
+            )
+            self.new_row, self.new_col = self.find_indexcase(
+                self.value_to, self.coordination
+            )
+
+            if self.board.check_legal(
+                self.canvas, self.old_row, self.old_col, self.new_row, self.new_col
+            ):
+                print("ok")
+
+            else:
+                print("invalid")
         else:
-            print("invalid")
+            messagebox.showwarning(
+                "Warning MessageBox", "Please enter valid case name!"
+            )
 
 
 class Chess:
