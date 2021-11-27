@@ -24,6 +24,8 @@ class Board:
         self.height = height
         self.width = width
         self.color = color
+        self.turn = 0
+        self.first_move = 1
         self.a = tk.PhotoImage(file="img/a.png")
         self.b = tk.PhotoImage(file="img/b.png")
         self.c = tk.PhotoImage(file="img/c.png")
@@ -230,8 +232,8 @@ class Board:
         self.old_color = self.piece_list[old_row][old_col].return_color()
         self.new_color = self.piece_list[new_row][new_col].return_color()
 
-        # print(self.old_color, self.old_name)
-        # print(self.new_color, self.new_name)
+        print(self.old_color, self.old_name)
+        print(self.new_color, self.new_name)
 
         # check if your turn
         if (self.turn == 0 and self.old_color == "black") or (
@@ -239,9 +241,62 @@ class Board:
         ):
             return False
 
+        # check if you chose empty case
+        if self.old_name == "empty":
+            return False
         # check if you attack your team
         if self.old_color == self.new_color:
             return False
+
+        if self.old_name == "pawn":
+            if self.check_pawn(
+                old_row,
+                old_col,
+                new_row,
+                new_col,
+                self.old_color,
+                self.old_name,
+                self.new_color,
+                self.new_name,
+            ):
+                return True
+
+    def check_pawn(
+        self,
+        old_row,
+        old_col,
+        new_row,
+        new_col,
+        old_color,
+        old_name,
+        new_color,
+        new_name,
+    ):
+        if old_color == "white":
+            if new_name == "empty" and old_col == new_col:
+                if old_row == new_row + 1:
+                    return True
+                if old_row == new_row + 2 and old_row == 6:
+                    return True
+
+            elif new_name != "empty" and old_row == new_row + 1:
+                if old_col == new_col:
+                    return True
+                elif old_col == new_col + 1 or old_col == new_col - 1:
+                    return True
+
+        if old_color == "black":
+            if new_name == "empty" and old_col == new_col:
+                if old_row == new_row - 1:
+                    return True
+                if old_row == new_row - 2 and old_row == 1:
+                    return True
+
+            elif new_name != "empty" and old_row == new_row - 1:
+                if old_col == new_col:
+                    return True
+                elif old_col == new_col + 1 or old_col == new_col - 1:
+                    return True
 
 
 # class Piece:
@@ -410,7 +465,10 @@ class Game:
             self.value_to, self.coordination
         )
 
-        self.board.check_legal(self.old_row, self.old_col, self.new_row, self.new_col)
+        if self.board.check_legal(
+            self.old_row, self.old_col, self.new_row, self.new_col
+        ):
+            print("ok")
 
 
 class Chess:
