@@ -267,10 +267,93 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
-
                 self.move(canvas, old_row, old_col)
                 self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
                 return True
+        elif self.old_name == "king":
+            if self.check_king(
+                old_row,
+                old_col,
+                new_row,
+                new_col,
+                self.old_color,
+                self.old_name,
+                self.new_color,
+                self.new_name,
+            ):
+                self.move(canvas, old_row, old_col)
+                self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                return True
+
+        elif self.old_name == "rook":
+            if self.check_rook(
+                old_row,
+                old_col,
+                new_row,
+                new_col,
+                self.old_color,
+                self.old_name,
+                self.new_color,
+                self.new_name,
+            ):
+                self.move(canvas, old_row, old_col)
+                self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                return True
+
+        elif self.old_name == "bishop":
+            if self.check_bishop(
+                old_row,
+                old_col,
+                new_row,
+                new_col,
+                self.old_color,
+                self.old_name,
+                self.new_color,
+                self.new_name,
+            ):
+                self.move(canvas, old_row, old_col)
+                self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                return True
+
+        elif self.old_name == "queen":
+            if self.check_rook(
+                old_row,
+                old_col,
+                new_row,
+                new_col,
+                self.old_color,
+                self.old_name,
+                self.new_color,
+                self.new_name,
+            ) and self.check_bishop(
+                old_row,
+                old_col,
+                new_row,
+                new_col,
+                self.old_color,
+                self.old_name,
+                self.new_color,
+                self.new_name,
+            ):
+                self.move(canvas, old_row, old_col)
+                self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                return True
+        elif self.old_name == "knight":
+            if self.check_knight(
+                old_row,
+                old_col,
+                new_row,
+                new_col,
+                self.old_color,
+                self.old_name,
+                self.new_color,
+                self.new_name,
+            ):
+                self.move(canvas, old_row, old_col)
+                self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                return True
+
+        return False
 
     def check_pawn(
         self,
@@ -316,9 +399,150 @@ class Board:
             else:
                 return False
 
-    # def move(self, canvas):
+    def check_king(
+        self,
+        old_row,
+        old_col,
+        new_row,
+        new_col,
+        old_color,
+        old_name,
+        new_color,
+        new_name,
+    ):
 
-    # canvas.move("p0", 0, -2)
+        if old_col == new_col:
+            if (old_row == new_row + 1) or (old_row == new_row - 1):
+                return True
+        elif (old_col == new_col + 1) or (old_col == new_col - 1):
+            if old_row == new_row:
+                return True
+            elif (old_row == new_row + 1) or (old_row == new_row - 1):
+                return True
+        else:
+            return False
+
+    def check_rook(
+        self,
+        old_row,
+        old_col,
+        new_row,
+        new_col,
+        old_color,
+        old_name,
+        new_color,
+        new_name,
+    ):
+        if old_row == new_row:
+            # move to right
+            if old_col < new_col:
+                if old_col == new_col + 1:
+                    return True
+                else:
+                    for i in range(old_col + 1, new_col):
+                        if self.pieces_list[old_row][i].return_name() != "empty":
+                            return False
+
+            # move to left
+            elif old_col > new_col:
+                if old_col == new_col + 1:
+                    return True
+                else:
+                    for i in range(old_col - 1, new_col, -1):
+                        if self.pieces_list[old_row][i].return_name() != "empty":
+                            return False
+
+        elif old_col == new_col:
+            # move up
+            if old_row > new_row:
+                if old_row == new_row + 1:
+                    return True
+                else:
+                    for i in range(old_row - 1, new_row, -1):
+                        if self.pieces_list[i][old_col].return_name() != "empty":
+                            return False
+            # move down
+            if old_row < new_row:
+                if old_row == new_row - 1:
+                    return True
+                else:
+                    for i in range(old_row + 1, new_row):
+                        if self.pieces_list[i][old_col].return_name() != "empty":
+                            return False
+
+        return True
+
+    def check_bishop(
+        self,
+        old_row,
+        old_col,
+        new_row,
+        new_col,
+        old_color,
+        old_name,
+        new_color,
+        new_name,
+    ):
+        # move to up right
+        if (old_row > new_row) and (old_col < new_col):
+            if (old_row == new_row + 1) and (old_col == new_col - 1):
+                return True
+            else:
+                for i in range(old_col + 1, new_col):
+                    old_row -= 1
+                    if self.pieces_list[old_row][i].return_name() != "empty":
+                        return False
+        # move to up left
+        if (old_row > new_row) and (old_col > new_col):
+            if (old_row == new_row + 1) and (old_col == new_col + 1):
+                return True
+            else:
+                for i in range(old_col - 1, new_col, -1):
+                    old_row -= 1
+                    if self.pieces_list[old_row][i].return_name() != "empty":
+                        return False
+
+        # move to down right
+        if (old_row < new_row) and (old_col < new_col):
+            if (old_row == new_row - 1) and (old_col == new_col - 1):
+                return True
+            else:
+                for i in range(old_col + 1, new_col):
+                    old_row += 1
+                    if self.pieces_list[old_row][i].return_name() != "empty":
+                        return False
+
+        # move to left right
+        if (old_row < new_row) and (old_col > new_col):
+            if (old_row == new_row - 1) and (old_col == new_col + 1):
+                return True
+            else:
+                for i in range(old_col - 1, new_col, -1):
+                    old_row += 1
+                    if self.pieces_list[old_row][i].return_name() != "empty":
+                        return False
+        return True
+
+    def check_knight(
+        self,
+        old_row,
+        old_col,
+        new_row,
+        new_col,
+        old_color,
+        old_name,
+        new_color,
+        new_name,
+    ):
+
+        if (old_row == new_row + 2) or (old_row == new_row - 2):
+            if (old_col == new_col + 1) or (old_col == new_col - 1):
+                return True
+        elif (old_col == new_col + 2) or (old_col == new_col - 2):
+            if (old_row == new_row + 1) or (old_row == new_row - 1):
+                return True
+        else:
+            return False
 
 
 # class Piece:
