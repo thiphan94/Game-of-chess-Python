@@ -58,10 +58,10 @@ class Board:
         self.b_pawn = tk.PhotoImage(file="img/b_pawn.png")
         self.image = tk.PhotoImage(file="img/w_pawn.png")
         # list for stockage pieces
-        self.piece_list = [
+        self.pieces_list = [
             [Piece("none", "empty") for col in range(8)] for row in range(8)
         ]
-        self.images_list = [[[None] for col in range(8)] for row in range(8)]
+        self.images_list = [["None" for col in range(8)] for row in range(8)]
 
         self.id = None
         self.coordination = coordination
@@ -136,107 +136,109 @@ class Board:
             for col in range(8):
 
                 if row == 1:
-                    self.piece_list[row][col] = Piece("black", "pawn")
+                    self.pieces_list[row][col] = Piece("black", "pawn")
                 elif row == 6:
-                    self.piece_list[row][col] = Piece("white", "pawn")
+                    self.pieces_list[row][col] = Piece("white", "pawn")
                 elif (row == 0 and col == 0) or (row == 0 and col == 7):
-                    self.piece_list[row][col] = Piece("black", "rook")
+                    self.pieces_list[row][col] = Piece("black", "rook")
                 elif (row == 0 and col == 1) or (row == 0 and col == 6):
-                    self.piece_list[row][col] = Piece("black", "knight")
+                    self.pieces_list[row][col] = Piece("black", "knight")
                 elif (row == 0 and col == 2) or (row == 0 and col == 5):
-                    self.piece_list[row][col] = Piece("black", "bishop")
+                    self.pieces_list[row][col] = Piece("black", "bishop")
                 elif row == 0 and col == 3:
-                    self.piece_list[row][col] = Piece("black", "queen")
+                    self.pieces_list[row][col] = Piece("black", "queen")
                 elif row == 0 and col == 4:
-                    self.piece_list[row][col] = Piece("black", "king")
+                    self.pieces_list[row][col] = Piece("black", "king")
                 elif (row == 7 and col == 0) or (row == 7 and col == 7):
-                    self.piece_list[row][col] = Piece("white", "rook")
+                    self.pieces_list[row][col] = Piece("white", "rook")
                 elif (row == 7 and col == 1) or (row == 7 and col == 6):
-                    self.piece_list[row][col] = Piece("white", "knight")
+                    self.pieces_list[row][col] = Piece("white", "knight")
                 elif (row == 7 and col == 2) or (row == 7 and col == 5):
-                    self.piece_list[row][col] = Piece("white", "bishop")
+                    self.pieces_list[row][col] = Piece("white", "bishop")
                 elif row == 7 and col == 3:
-                    self.piece_list[row][col] = Piece("white", "queen")
+                    self.pieces_list[row][col] = Piece("white", "queen")
                 elif row == 7 and col == 4:
-                    self.piece_list[row][col] = Piece("white", "king")
+                    self.pieces_list[row][col] = Piece("white", "king")
                 else:
-                    self.piece_list[row][col] = Piece("none", "empty")
+                    self.pieces_list[row][col] = Piece("none", "empty")
 
     def install_pieces(self, canvas):
         """set up pieces."""
         # canvas.create_image(0, 0, anchor=NW, image=self.w_pawn)
-        self.images = list()
+        # self.images = list()
         for row in range(8):
             y = (SIZE * (row + 1)) + 8
-            new = []
+            # new = []
             for col in range(8):
                 x = (SIZE * (col + 1)) + 8
                 if row == 1:
                     self.id = canvas.create_image(x, y, anchor=NW, image=self.b_pawn)
-                    new.append(self.id)
+                    self.images_list[row][col] = self.id
                 elif row == 6:
                     self.id = canvas.create_image(x, y, anchor=NW, image=self.w_pawn)
-                    new.append(self.id)
+                    self.images_list[row][col] = self.id
                 elif (row == 0 and col == 0) or (row == 0 and col == 7):
                     self.id = canvas.create_image(x, y, anchor=NW, image=self.b_rook)
-                    new.append(self.id)
+                    self.images_list[row][col] = self.id
                 elif (row == 0 and col == 1) or (row == 0 and col == 6):
                     self.id = canvas.create_image(x, y, anchor=NW, image=self.b_knight)
-                    new.append(self.id)
+                    self.images_list[row][col] = self.id
                 elif (row == 0 and col == 2) or (row == 0 and col == 5):
                     self.id = canvas.create_image(x, y, anchor=NW, image=self.b_bishop)
-                    new.append(self.id)
+                    self.images_list[row][col] = self.id
                 elif row == 0 and col == 3:
                     self.id = canvas.create_image(x, y, anchor=NW, image=self.b_queen)
-                    new.append(self.id)
+                    self.images_list[row][col] = self.id
                 elif row == 0 and col == 4:
                     self.id = canvas.create_image(x, y, anchor=NW, image=self.b_king)
+                    self.images_list[row][col] = self.id
                 elif (row == 7 and col == 0) or (row == 7 and col == 7):
-                    new.append(self.id)
                     self.id = canvas.create_image(x, y, anchor=NW, image=self.w_rook)
-                    new.append(self.id)
+                    self.images_list[row][col] = self.id
                 elif (row == 7 and col == 1) or (row == 7 and col == 6):
                     self.id = canvas.create_image(x, y, anchor=NW, image=self.w_knight)
-                    new.append(self.id)
+                    self.images_list[row][col] = self.id
                 elif (row == 7 and col == 2) or (row == 7 and col == 5):
-                    canvas.create_image(x, y, anchor=NW, image=self.w_bishop)
                     self.id = canvas.create_image(x, y, anchor=NW, image=self.w_bishop)
-                    new.append(self.id)
+                    self.images_list[row][col] = self.id
                 elif row == 7 and col == 3:
-                    canvas.create_image(x, y, anchor=NW, image=self.w_queen)
                     self.id = canvas.create_image(x, y, anchor=NW, image=self.w_queen)
-                    new.append(self.id)
+                    self.images_list[row][col] = self.id
                 elif row == 7 and col == 4:
-                    canvas.create_image(x, y, anchor=NW, image=self.w_king)
                     self.id = canvas.create_image(x, y, anchor=NW, image=self.w_king)
-                    new.append(self.id)
-                else:
-                    new.append("Empty")
+                    self.images_list[row][col] = self.id
+
             # reset position x,y
             x = 0
             y = 0
-            self.images_list.append(new)
+            # self.images_list.append(new)
 
-        # print(self.piece_list)
+    def move(self, canvas, old_row, old_col):
+        canvas.delete(self.images_list[old_row][old_col])
+        self.images_list[old_row][old_col] = "None"
+        self.pieces_list[old_row][old_col] = Piece("none", "empty")
 
-    def remove(self, canvas):
-        canvas.delete(self.piece_list[1][0])
+    def reset(self, canvas, old_color, old_name, new_row, new_col):
+        if old_color == "white":
+            image = self.w_pawn
+        else:
+            image = self.b_pawn
 
-    def reset(self, canvas):
-        pass
+        x = (SIZE * (new_col + 1)) + 8
+        y = (SIZE * (new_row + 1)) + 8
+        self.id = canvas.create_image(x, y, anchor=NW, image=image)
+        self.images_list[new_row][new_col] = self.id
+        self.pieces_list[new_row][new_col] = Piece(old_color, old_name)
 
-    def check_general(self, old_color, old_name, new_color, new_name):
-        """check general case"""
+    def check_legal(self, canvas, old_row, old_col, new_row, new_col):
 
-    def check_legal(self, old_row, old_col, new_row, new_col):
-        print(old_row, old_col, new_row, new_col)
-        self.old_name = self.piece_list[old_row][old_col].return_name()
-        self.new_name = self.piece_list[new_row][new_col].return_name()
-        self.old_color = self.piece_list[old_row][old_col].return_color()
-        self.new_color = self.piece_list[new_row][new_col].return_color()
+        self.old_name = self.pieces_list[old_row][old_col].return_name()
+        self.new_name = self.pieces_list[new_row][new_col].return_name()
+        self.old_color = self.pieces_list[old_row][old_col].return_color()
+        self.new_color = self.pieces_list[new_row][new_col].return_color()
 
-        print(self.old_color, self.old_name)
-        print(self.new_color, self.new_name)
+        # print(self.old_color, self.old_name)
+        # print(self.new_color, self.new_name)
 
         # check if your turn
         if (self.turn == 0 and self.old_color == "black") or (
@@ -266,6 +268,8 @@ class Board:
                 self.new_name,
             ):
 
+                self.move(canvas, old_row, old_col)
+                self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
                 return True
 
     def check_pawn(
@@ -284,7 +288,7 @@ class Board:
                 if old_row == new_row + 1:
                     return True
                 if old_row == new_row + 2 and old_row == 6:
-                    print("ok")
+
                     return True
 
             elif new_name != "empty" and old_row == new_row + 1:
@@ -292,22 +296,29 @@ class Board:
                     return True
                 elif old_col == new_col + 1 or old_col == new_col - 1:
                     return True
+            else:
+                return False
 
         if old_color == "black":
             if new_name == "empty" and old_col == new_col:
                 if old_row == new_row - 1:
                     return True
-                if old_row == new_row - 2 and old_row == 1:
+                elif old_row == new_row - 2 and old_row == 1:
                     return True
+                else:
+                    return False
 
             elif new_name != "empty" and old_row == new_row - 1:
                 if old_col == new_col:
                     return True
                 elif old_col == new_col + 1 or old_col == new_col - 1:
                     return True
+            else:
+                return False
 
-    def move(self, canvas):
-        canvas.move(self.images_list[7][0], 100, 100)
+    # def move(self, canvas):
+
+    # canvas.move("p0", 0, -2)
 
 
 # class Piece:
@@ -451,7 +462,7 @@ class Game:
         self.board.install_pieces(self.canvas)
 
         # self.pieces.install_in(self.canvas)
-        # self.pieces.remove(self.canvas)
+        # self.pieces.move(self.canvas)
 
     def start_animation(self):
         """Appeler la création des bases au méthode start()."""
@@ -477,10 +488,10 @@ class Game:
         )
 
         if self.board.check_legal(
-            self.old_row, self.old_col, self.new_row, self.new_col
+            self.canvas, self.old_row, self.old_col, self.new_row, self.new_col
         ):
             print("ok")
-            self.board.move(self.canvas)
+
         else:
             print("invalid")
 
