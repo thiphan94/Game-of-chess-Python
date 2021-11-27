@@ -215,6 +215,9 @@ class Board:
             y = 0
             # self.images_list.append(new)
 
+    def return_turn(self):
+        return self.turn
+
     def change_turn(self):
         if self.turn == 0:
             self.turn = 1
@@ -288,7 +291,7 @@ class Board:
                 )
                 self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
                 self.change_turn()
-                print(self.turn)
+
                 return True
         elif self.old_name == "king":
             if self.check_king(
@@ -714,9 +717,12 @@ class Game:
         # self.matrix = board_name
         self.valid_case = valid_case
         self.lbl = tk.Label(self.frame, text="")
+        self.my_var = StringVar()
+        self.my_var.set("Turn of White")
         self.displayturn1 = tk.Label(
-            self.frame, text="Turn of {0}".format(self.turn), font=("Arial", 25)
-        ).place(x=720, y=100)
+            self.frame, textvariable=self.my_var, font=("Arial", 25)
+        )
+        self.displayturn1.place(x=720, y=50)
 
         self.displayturn2 = tk.Label(
             self.frame, text="Please chose your piece!", font=("Arial", 25)
@@ -762,10 +768,19 @@ class Game:
                 if matrix[i][j] == element:
                     return i, j
 
+    # update and display turn of player!
+    def update_turn(self):
+        if self.turn == 1:
+            self.my_var.set("Turn of Black")
+        else:
+            self.my_var.set("Turn of White")
+        # print("inupdate", self.turn)
+
     def get_move(self):
         self.value_from = self.player_input1.get().upper()
         self.value_to = self.player_input2.get().upper()
 
+        print(self.turn)
         print(self.value_from, self.value_to)
 
         if (self.value_from in self.valid_case) and (self.value_to in self.valid_case):
@@ -783,10 +798,12 @@ class Game:
             if self.board.check_legal(
                 self.canvas, self.old_row, self.old_col, self.new_row, self.new_col
             ):
-                print("ok")
-
+                self.turn = self.board.return_turn()
+                self.update_turn()
             else:
-                print("invalid")
+                messagebox.showerror(
+                    "Error MessageBox", "An illegal move! Please make a legal move!"
+                )
         else:
             messagebox.showwarning(
                 "Warning MessageBox", "Please enter valid case name!"
