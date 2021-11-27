@@ -8,7 +8,7 @@ import operator
 import numpy as np
 
 
-from matrix import board_name, coordination, board_coordination
+from matrix import coordination, valid_case
 
 try:
     import tkinter as tk
@@ -710,7 +710,7 @@ class Game:
         self.board = Board(width, height)
         self.coordination = coordination
         self.matrix = board_name
-
+        self.valid_case = valid_case
         self.lbl = tk.Label(self.frame, text="")
         self.displayturn1 = tk.Label(
             self.frame, text="Turn of {0}".format(self.turn), font=("Arial", 25)
@@ -761,8 +761,10 @@ class Game:
                     return i, j
 
     def get_move(self):
-        self.value_from = self.player_input1.get()
-        self.value_to = self.player_input2.get()
+        self.value_from = self.player_input1.get().upper()
+        self.value_to = self.player_input2.get().upper()
+
+        print(self.value_from, self.value_to)
         self.lbl.config(text="Provided Input: " + self.value_from + self.value_to)
         self.lbl.place(x=450, y=900, height=30, width=100)
 
