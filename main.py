@@ -470,7 +470,17 @@ class Board:
             if new_name == "empty" and old_col == new_col:
                 if old_row == new_row + 1:
                     return True
+                elif old_row == new_row + 2 and old_row == 6:
+                    for i in range(old_row - 1, new_row, -1):
+                        if self.pieces_list[i][old_col].return_name() != "empty":
+                            return False
+                    return True
+
+            elif new_name != "empty" and old_col == new_col:
                 if old_row == new_row + 2 and old_row == 6:
+                    for i in range(old_row - 1, new_row, -1):
+                        if self.pieces_list[i][old_col].return_name() != "empty":
+                            return False
                     return True
 
             elif new_name != "empty" and old_row == new_row + 1:
@@ -487,9 +497,17 @@ class Board:
                 if old_row == new_row - 1:
                     return True
                 elif old_row == new_row - 2 and old_row == 1:
+                    for i in range(old_row + 1, new_row):
+                        if self.pieces_list[i][old_col].return_name() != "empty":
+                            return False
                     return True
-                else:
-                    return False
+
+            elif new_name != "empty" and old_col == new_col:
+                if old_row == new_row - 2 and old_row == 1:
+                    for i in range(old_row + 1, new_row):
+                        if self.pieces_list[i][old_col].return_name() != "empty":
+                            return False
+                    return True
 
             elif new_name != "empty" and old_row == new_row - 1:
                 if old_col == new_col:
@@ -542,7 +560,7 @@ class Board:
                     for i in range(old_col + 1, new_col):
                         if self.pieces_list[old_row][i].return_name() != "empty":
                             return False
-
+                return True
             # move to left
             elif old_col > new_col:
                 if old_col == new_col + 1:
@@ -562,6 +580,7 @@ class Board:
                     for i in range(old_row - 1, new_row, -1):
                         if self.pieces_list[i][old_col].return_name() != "empty":
                             return False
+                return True
             # move down
             if old_row < new_row:
                 if old_row == new_row - 1:
