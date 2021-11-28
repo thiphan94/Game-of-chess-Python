@@ -74,6 +74,10 @@ class Board:
         self.images_list = [["None" for col in range(8)] for row in range(8)]
         self.id = None
         self.coordination = coordination
+        self.white_checked = False
+        self.black_checked = False
+        self.bk_location = (0, 4)
+        self.wk_location = (7, 4)
         self.create_list()
 
     def install_in(self, canvas):
@@ -214,6 +218,163 @@ class Board:
             x = 0
             y = 0
 
+    def ischecked(
+        self,
+        old_row,
+        old_col,
+        new_row,
+        new_col,
+        old_color,
+        old_name,
+        new_color,
+        new_name,
+    ):
+        self.update_temporary(old_color, old_name, new_row, new_col)
+        for i in range(8):
+            for j in range(8):
+                check_list = self.list_moves(
+                    self, old_row, old_col, old_color, old_name
+                )
+                if self.wk_location in check_list:
+                    self.white_checked = True
+                    return True
+
+        self.return_update(old_color, old_name, new_row, new_col)
+        self.white_checked = False
+        return False
+
+        # if old_color == "white":
+        #     self.kr = self.wk_location[0]
+        #     self.kc = self.wk_location[1]
+        #     self.br = 0
+        #     self.bc = 0
+        #     for i in range(8):
+        #         for j in range(8):
+        #             if (i == self.kr or j == self.kc) and self.pieces_list[i][
+        #                 j
+        #             ].return_color() == "black":
+        #                 self.white_checked = True
+        #             elif (
+        #                 abs(i - self.kr) == abs(j - self.kc)
+        #                 and self.pieces_list[i][j].return_color() == "black"
+        #             ):
+        #                 self.white_checked = True
+        #             elif (
+        #                 i == self.kr - 2
+        #                 and (j == self.kc - 1 or j == self.kc + 1)
+        #                 and self.pieces_list[i][j].return_color() == "black"
+        #             ):
+        #                 self.white_checked = True
+        #
+        #             elif (
+        #                 i == self.kr + 2
+        #                 and (j == self.kc - 1 or j == self.kc + 1)
+        #                 and self.pieces_list[i][j].return_color() == "black"
+        #             ):
+        #                 self.white_checked = True
+        #
+        #             elif (
+        #                 i == self.kr - 1
+        #                 and (j == self.kc - 2 or j == self.kc + 2)
+        #                 and self.pieces_list[i][j].return_color() == "black"
+        #             ):
+        #                 self.white_checked = True
+        #
+        #             elif (
+        #                 i == self.kr + 1
+        #                 and (j == self.kc - 2 or j == self.kc + 2)
+        #                 and self.pieces_list[i][j].return_color() == "black"
+        #             ):
+        #                 self.white_checked = True
+
+    def return_update(self, old_color, old_name, new_row, new_col):
+        """Return after update temporary piece."""
+        self.pieces_list[old_row][old_col] = Piece(old_color, old_name)
+        self.pieces_list[new_row][new_col] = Piece("none", "empty")
+        Piece(old_color, old_name)
+
+    def list_moves(self, old_row, old_col, old_color, old_name):
+        ml = []
+
+        for i in range(8):
+            for j in range(8):
+                new_color = self.pieces_list[i][j].return_color()
+                new_name = self.pieces_list[i][j].return_name()
+                # check if you chose empty case
+                if old_name != "empty" and old_color != new_color:
+                    if old_name == "pawn":
+                        if self.check_pawn(
+                            old_row,
+                            old_col,
+                            i,
+                            j,
+                            old_color,
+                            old_name,
+                            new_color,
+                            new_name,
+                        ):
+                            ml.append((i, j))
+
+                    elif old_name == "rook":
+                        if self.check_rook(
+                            old_row,
+                            old_col,
+                            i,
+                            j,
+                            old_color,
+                            old_name,
+                            new_color,
+                            new_name,
+                        ):
+                            ml.append((i, j))
+
+                    elif old_name == "knight":
+                        if self.check_knight(
+                            old_row,
+                            old_col,
+                            i,
+                            j,
+                            old_color,
+                            old_name,
+                            new_color,
+                            new_name,
+                        ):
+                            ml.append((i, j))
+
+                    elif old_name == "bishop":
+                        if self.check_bishop(
+                            old_row,
+                            old_col,
+                            i,
+                            j,
+                            old_color,
+                            old_name,
+                            new_color,
+                            new_name,
+                        ):
+                            ml.append((i, j))
+
+                    elif old_name == "queen":
+                        if self.check_queen(
+                            old_row,
+                            old_col,
+                            i,
+                            j,
+                            old_color,
+                            old_name,
+                            new_color,
+                            new_name,
+                        ):
+                            ml.append((i, j))
+        return ml
+
+    def update_temporary(self, old_color, old_name, new_row, new_col):
+        """Update temporary piece."""
+        self.pieces_list[old_row][old_col] = Piece("none", "empty")
+        x = (SIZE * (new_col + 1)) + 8
+        y = (SIZE * (new_row + 1)) + 8
+        self.pieces_list[new_row][new_col] = Piece(old_color, old_name)
+
     def return_turn(self):
         """Return turn for class Chess."""
         return self.turn
@@ -234,7 +395,7 @@ class Board:
             canvas.delete(self.images_list[new_row][new_col])
             self.images_list[new_row][new_col] = "None"
 
-    def reset(self, canvas, image, old_color, old_name, new_row, new_col):
+    def update_move(self, canvas, image, old_color, old_name, new_row, new_col):
         """Reset piece."""
         x = (SIZE * (new_col + 1)) + 8
         y = (SIZE * (new_row + 1)) + 8
@@ -263,7 +424,21 @@ class Board:
         if self.old_color == self.new_color:
             return False
 
+        # Check
+        if ischecked(
+            old_row,
+            old_col,
+            new_row,
+            new_col,
+            self.old_color,
+            self.old_name,
+            self.new_color,
+            self.new_name,
+        ):
+            return False
+
         if self.old_name == "pawn":
+            print(self.list_moves(old_row, old_col, self.old_color, self.old_name))
             if self.check_pawn(
                 old_row,
                 old_col,
@@ -286,13 +461,14 @@ class Board:
                     self.image = self.w_pawn
                 else:
                     self.image = self.b_pawn
-                self.reset(
+                self.update_move(
                     canvas, self.image, self.old_color, self.old_name, new_row, new_col
                 )
                 self.change_turn()
 
                 return True
         elif self.old_name == "king":
+            print(self.list_moves(old_row, old_col, self.old_color, self.old_name))
             if self.check_king(
                 old_row,
                 old_col,
@@ -313,9 +489,14 @@ class Board:
                 )
                 if self.old_color == "white":
                     self.image = self.w_king
+                    self.wk_location[0] = new_row
+                    self.wk_location[1] = new_col
                 else:
                     self.image = self.b_king
-                self.reset(
+                    self.bk_location[0] = new_row
+                    self.bk_location[1] = new_col
+
+                self.update_move(
                     canvas, self.image, self.old_color, self.old_name, new_row, new_col
                 )
                 self.change_turn()
@@ -323,6 +504,7 @@ class Board:
                 return True
 
         elif self.old_name == "rook":
+            print(self.list_moves(old_row, old_col, self.old_color, self.old_name))
             if self.check_rook(
                 old_row,
                 old_col,
@@ -345,14 +527,16 @@ class Board:
                     self.image = self.w_rook
                 else:
                     self.image = self.b_rook
-                self.reset(
+                self.update_move(
                     canvas, self.image, self.old_color, self.old_name, new_row, new_col
                 )
                 self.change_turn()
                 print(self.turn)
+
                 return True
 
         elif self.old_name == "bishop":
+            print(self.list_moves(old_row, old_col, self.old_color, self.old_name))
             if self.check_bishop(
                 old_row,
                 old_col,
@@ -375,7 +559,7 @@ class Board:
                     self.image = self.w_bishop
                 else:
                     self.image = self.b_bishop
-                self.reset(
+                self.update_move(
                     canvas, self.image, self.old_color, self.old_name, new_row, new_col
                 )
                 self.change_turn()
@@ -383,6 +567,7 @@ class Board:
                 return True
 
         elif self.old_name == "queen":
+            print(self.list_moves(old_row, old_col, self.old_color, self.old_name))
             if self.check_queen(
                 old_row,
                 old_col,
@@ -405,13 +590,14 @@ class Board:
                     self.image = self.w_queen
                 else:
                     self.image = self.b_queen
-                self.reset(
+                self.update_move(
                     canvas, self.image, self.old_color, self.old_name, new_row, new_col
                 )
                 self.change_turn()
                 print(self.turn)
                 return True
         elif self.old_name == "knight":
+            print(self.list_moves(old_row, old_col, self.old_color, self.old_name))
             if self.check_knight(
                 old_row,
                 old_col,
@@ -434,7 +620,7 @@ class Board:
                     self.image = self.w_knight
                 else:
                     self.image = self.b_knight
-                self.reset(
+                self.update_move(
                     canvas, self.image, self.old_color, self.old_name, new_row, new_col
                 )
                 self.change_turn()
@@ -466,13 +652,6 @@ class Board:
                             return False
                     return True
 
-            elif new_name != "empty" and old_col == new_col:
-                if old_row == new_row + 2 and old_row == 6:
-                    for i in range(old_row - 1, new_row, -1):
-                        if self.pieces_list[i][old_col].return_name() != "empty":
-                            return False
-                    return True
-
             elif new_name != "empty" and old_row == new_row + 1:
                 if old_col == new_col:
                     return True
@@ -487,13 +666,6 @@ class Board:
                 if old_row == new_row - 1:
                     return True
                 elif old_row == new_row - 2 and old_row == 1:
-                    for i in range(old_row + 1, new_row):
-                        if self.pieces_list[i][old_col].return_name() != "empty":
-                            return False
-                    return True
-
-            elif new_name != "empty" and old_col == new_col:
-                if old_row == new_row - 2 and old_row == 1:
                     for i in range(old_row + 1, new_row):
                         if self.pieces_list[i][old_col].return_name() != "empty":
                             return False
