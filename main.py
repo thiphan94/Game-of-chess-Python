@@ -229,19 +229,42 @@ class Board:
         new_color,
         new_name,
     ):
-        self.update_temporary(old_color, old_name, new_row, new_col)
-        for i in range(8):
-            for j in range(8):
-                check_list = self.list_moves(
-                    self, old_row, old_col, old_color, old_name
-                )
-                if self.wk_location in check_list:
-                    self.white_checked = True
-                    return True
+        if old_color == "white":
+            self.update_temporary(
+                old_color, old_name, old_row, old_col, new_row, new_col
+            )
+            for i in range(8):
+                for j in range(8):
+                    color = self.pieces_list[i][j].return_color()
+                    name = self.pieces_list[i][j].return_name()
+                    check_list = self.list_moves(i, j, color, name)
+                    if self.wk_location in check_list:
+                        print("co ton tai")
+                        self.white_checked = True
+                        return True
 
-        self.return_update(old_color, old_name, new_row, new_col)
-        self.white_checked = False
-        return False
+            self.return_update(old_color, old_name, old_row, old_col, new_row, new_col)
+            self.white_checked = False
+            return False
+        else:
+            self.update_temporary(
+                old_color, old_name, old_row, old_col, new_row, new_col
+            )
+            print("black")
+            for i in range(8):
+                for j in range(8):
+                    color = self.pieces_list[i][j].return_color()
+                    name = self.pieces_list[i][j].return_name()
+                    check_list = self.list_moves(i, j, color, name)
+                    # print("list den", check_list)
+                    if self.bk_location in check_list:
+                        print("co ton tai")
+                        self.black_checked = True
+                        return True
+
+            self.return_update(old_color, old_name, old_row, old_col, new_row, new_col)
+            self.black_checked = False
+            return False
 
         # if old_color == "white":
         #     self.kr = self.wk_location[0]
@@ -286,12 +309,6 @@ class Board:
         #                 and self.pieces_list[i][j].return_color() == "black"
         #             ):
         #                 self.white_checked = True
-
-    def return_update(self, old_color, old_name, new_row, new_col):
-        """Return after update temporary piece."""
-        self.pieces_list[old_row][old_col] = Piece(old_color, old_name)
-        self.pieces_list[new_row][new_col] = Piece("none", "empty")
-        Piece(old_color, old_name)
 
     def list_moves(self, old_row, old_col, old_color, old_name):
         ml = []
@@ -368,12 +385,18 @@ class Board:
                             ml.append((i, j))
         return ml
 
-    def update_temporary(self, old_color, old_name, new_row, new_col):
+    def update_temporary(self, old_color, old_name, old_row, old_col, new_row, new_col):
         """Update temporary piece."""
         self.pieces_list[old_row][old_col] = Piece("none", "empty")
         x = (SIZE * (new_col + 1)) + 8
         y = (SIZE * (new_row + 1)) + 8
         self.pieces_list[new_row][new_col] = Piece(old_color, old_name)
+
+    def return_update(self, old_color, old_name, old_row, old_col, new_row, new_col):
+        """Return after update temporary piece."""
+        self.pieces_list[old_row][old_col] = Piece(old_color, old_name)
+        self.pieces_list[new_row][new_col] = Piece("none", "empty")
+        Piece(old_color, old_name)
 
     def return_turn(self):
         """Return turn for class Chess."""
@@ -425,7 +448,7 @@ class Board:
             return False
 
         # Check
-        if ischecked(
+        if self.ischecked(
             old_row,
             old_col,
             new_row,
@@ -435,6 +458,7 @@ class Board:
             self.new_color,
             self.new_name,
         ):
+            print("error")
             return False
 
         if self.old_name == "pawn":
