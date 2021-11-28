@@ -679,15 +679,13 @@ class Game:
         )
         self.displayturn1.place(x=720, y=100)
 
-        # Information
+        # move
         self.displayturn2 = tk.Label(
             self.frame, text="Please chose your piece!", font=("Arial", 25)
         ).place(x=100, y=680)
-
         self.from_label = tk.Label(self.frame, text="From", font=("Arial", 15)).place(
             x=30, y=750
         )
-
         self.to_label = tk.Label(self.frame, text="To", font=("Arial", 15)).place(
             x=250, y=750
         )
@@ -732,6 +730,8 @@ class Game:
         self.sec = self.sec + 1
         self.displaytime.configure(text=self.sec)
         self.canvas.after(1000, self.update_clock)
+        while self.sec == 300:
+            self.sec = 0
 
     # update and display turn of player!
     def update_turn(self):
