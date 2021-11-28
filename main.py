@@ -29,6 +29,8 @@ class Board:
         self.width = width
         self.color = color
         self.turn = 0
+        self.passant = 0
+        self.count_step = 0
 
         self.a = tk.PhotoImage(file="img/a.png")
         self.b = tk.PhotoImage(file="img/b.png")
@@ -60,7 +62,7 @@ class Board:
         self.b_queen = tk.PhotoImage(file="img/b_queen.png")
         self.w_pawn = tk.PhotoImage(file="img/w_pawn.png")
         self.b_pawn = tk.PhotoImage(file="img/b_pawn.png")
-        self.image = tk.PhotoImage(file="img/w_pawn.png")
+
         # list for stockage pieces
         self.pieces_list = [
             [Piece("none", "empty") for col in range(8)] for row in range(8)
@@ -217,6 +219,10 @@ class Board:
             y = 0
             # self.images_list.append(new)
 
+    def update_count(self):
+        self.count_step += 1
+        print(self.count_step)
+
     def return_turn(self):
         return self.turn
 
@@ -234,17 +240,13 @@ class Board:
             canvas.delete(self.images_list[new_row][new_col])
             self.images_list[new_row][new_col] = "None"
 
-    def reset(self, canvas, old_color, old_name, new_row, new_col):
-        if old_color == "white":
-            image = self.w_pawn
-        else:
-            image = self.b_pawn
-
+    def reset(self, canvas, image, old_color, old_name, new_row, new_col):
         x = (SIZE * (new_col + 1)) + 8
         y = (SIZE * (new_row + 1)) + 8
         self.id = canvas.create_image(x, y, anchor=NW, image=image)
         self.images_list[new_row][new_col] = self.id
         self.pieces_list[new_row][new_col] = Piece(old_color, old_name)
+        self.update_count()
 
     def check_legal(self, canvas, old_row, old_col, new_row, new_col):
 
@@ -261,16 +263,12 @@ class Board:
             self.turn == 1 and self.old_color == "white"
         ):
             return False
-
         # check if you chose empty case
         if self.old_name == "empty":
             return False
         # check if you attack your team
         if self.old_color == self.new_color:
             return False
-        # else:
-        #     return True
-        # check general case
 
         if self.old_name == "pawn":
             if self.check_pawn(
@@ -291,7 +289,13 @@ class Board:
                     new_col,
                     self.new_name,
                 )
-                self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                if self.old_color == "white":
+                    self.image = self.w_pawn
+                else:
+                    self.image = self.b_pawn
+                self.reset(
+                    canvas, self.image, self.old_color, self.old_name, new_row, new_col
+                )
                 self.change_turn()
 
                 return True
@@ -314,7 +318,13 @@ class Board:
                     new_col,
                     self.new_name,
                 )
-                self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                if self.old_color == "white":
+                    self.image = self.w_king
+                else:
+                    self.image = self.b_king
+                self.reset(
+                    canvas, self.image, self.old_color, self.old_name, new_row, new_col
+                )
                 self.change_turn()
                 print(self.turn)
                 return True
@@ -338,7 +348,13 @@ class Board:
                     new_col,
                     self.new_name,
                 )
-                self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                if self.old_color == "white":
+                    self.image = self.w_rook
+                else:
+                    self.image = self.b_rook
+                self.reset(
+                    canvas, self.image, self.old_color, self.old_name, new_row, new_col
+                )
                 self.change_turn()
                 print(self.turn)
                 return True
@@ -362,7 +378,13 @@ class Board:
                     new_col,
                     self.new_name,
                 )
-                self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                if self.old_color == "white":
+                    self.image = self.w_bishop
+                else:
+                    self.image = self.b_bishop
+                self.reset(
+                    canvas, self.image, self.old_color, self.old_name, new_row, new_col
+                )
                 self.change_turn()
                 print(self.turn)
                 return True
@@ -395,7 +417,13 @@ class Board:
                     new_col,
                     self.new_name,
                 )
-                self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                if self.old_color == "white":
+                    self.image = self.w_queen
+                else:
+                    self.image = self.b_queen
+                self.reset(
+                    canvas, self.image, self.old_color, self.old_name, new_row, new_col
+                )
                 self.change_turn()
                 print(self.turn)
                 return True
@@ -418,7 +446,13 @@ class Board:
                     new_col,
                     self.new_name,
                 )
-                self.reset(canvas, self.old_color, self.old_name, new_row, new_col)
+                if self.old_color == "white":
+                    self.image = self.w_knight
+                else:
+                    self.image = self.b_knight
+                self.reset(
+                    canvas, self.image, self.old_color, self.old_name, new_row, new_col
+                )
                 self.change_turn()
                 print(self.turn)
                 return True
@@ -448,6 +482,7 @@ class Board:
                     return True
                 elif old_col == new_col + 1 or old_col == new_col - 1:
                     return True
+
             else:
                 return False
 
