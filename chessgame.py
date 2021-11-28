@@ -7,6 +7,8 @@ import json
 import operator
 import numpy as np
 
+# import pgn
+
 
 from matrix import coordination, valid_case
 
@@ -640,65 +642,6 @@ class Piece:
         return self.color
 
 
-# class Rook(Piece):
-#     def __init__(self, color, type, canvas, x, y):
-#         super().__init__(color, type, canvas)
-#         if color == "white":
-#             file_name = "img/" + "w_" + type + ".png"
-#         else:
-#             file_name = "img/" + "b_" + type + ".png"
-#         # print(file_name)
-#         self.title = tk.PhotoImage(file=file_name)
-#         canvas.create_image(x, y, anchor=NW, image=self.title)
-#
-#
-# class Knight(Piece):
-#     def __init__(self, color, type, canvas, x, y):
-#         super().__init__(color, type, canvas)
-#         if color == "white":
-#             file_name = "img/" + "w_" + type + ".png"
-#         else:
-#             file_name = "img/" + "b_" + type + ".png"
-#         # print(file_name)
-#         self.title = tk.PhotoImage(file=file_name)
-#         canvas.create_image(x, y, anchor=NW, image=self.title)
-#
-#
-# class Bishop(Piece):
-#     def __init__(self, color, type, canvas, x, y):
-#         super().__init__(color, type, canvas)
-#         if color == "white":
-#             file_name = "img/" + "w_" + type + ".png"
-#         else:
-#             file_name = "img/" + "b_" + type + ".png"
-#         # print(file_name)
-#         self.title = tk.PhotoImage(file=file_name)
-#         canvas.create_image(x, y, anchor=NW, image=self.title)
-#
-#
-# class Queen(Piece):
-#     def __init__(self, color, type, canvas, x, y):
-#         super().__init__(color, type, canvas)
-#         if color == "white":
-#             file_name = "img/" + "w_" + type + ".png"
-#         else:
-#             file_name = "img/" + "b_" + type + ".png"
-#         # print(file_name)
-#         self.title = tk.PhotoImage(file=file_name)
-#         canvas.create_image(x, y, anchor=NW, image=self.title)
-#
-#
-# class King(Piece):
-#     def __init__(self, color, type, canvas, x, y):
-#         super().__init__(color, type, canvas)
-#         if color == "white":
-#             file_name = "img/" + "w_" + type + ".png"
-#         else:
-#             file_name = "img/" + "b_" + type + ".png"
-#         self.title = tk.PhotoImage(file=file_name)
-#         canvas.create_image(x, y, anchor=NW, image=self.title)
-#
-
 # #****************************************************************
 class Game:
     """Class pour mettre en lien tous les autres class."""
@@ -709,6 +652,7 @@ class Game:
         height = 1024
         self.frame = frame
         self.turn = 0
+        self.sec = 0
         self.canvas = tk.Canvas(self.frame, width=width, height=height)
         self.canvas.pack(side="top", fill="both", expand=True)
         self.ecran = tk.PhotoImage(file="w2.png")
@@ -717,13 +661,25 @@ class Game:
         # self.matrix = board_name
         self.valid_case = valid_case
         self.lbl = tk.Label(self.frame, text="")
+        # Clock
+        self.time_info = tk.Label(
+            self.frame, text="You are 300s of your turn!", font=("Arial", 20)
+        ).place(x=670, y=10)
+        self.time = tk.Label(self.frame, text="Timer", font=("Arial", 20)).place(
+            x=670, y=50
+        )
+        self.displaytime = tk.Label(text="", font=("Arial", 20), fg="black")
+        self.displaytime.place(x=770, y=50)
+
+        # display turn of player
         self.my_var = StringVar()
         self.my_var.set("Turn of White")
         self.displayturn1 = tk.Label(
             self.frame, textvariable=self.my_var, font=("Arial", 25)
         )
-        self.displayturn1.place(x=720, y=50)
+        self.displayturn1.place(x=720, y=100)
 
+        # Information
         self.displayturn2 = tk.Label(
             self.frame, text="Please chose your piece!", font=("Arial", 25)
         ).place(x=100, y=680)
@@ -748,6 +704,9 @@ class Game:
             self.frame, text="Ok", font=("Arial", 15), command=lambda: self.get_move()
         ).place(x=450, y=750, height=30, width=100)
 
+        # clock
+        self.update_clock()
+
     def start(self):
         """Commencer à créer défender, aliens, bunkers."""
         self.canvas.create_image(0, 0, image=self.ecran, tags="image", anchor="nw")
@@ -767,6 +726,12 @@ class Game:
             for j in range(len(matrix[i])):
                 if matrix[i][j] == element:
                     return i, j
+
+    def update_clock(self):
+        """Mettre à jour le temps."""
+        self.sec = self.sec + 1
+        self.displaytime.configure(text=self.sec)
+        self.canvas.after(1000, self.update_clock)
 
     # update and display turn of player!
     def update_turn(self):
