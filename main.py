@@ -67,19 +67,14 @@ class Board:
         self.b_queen = tk.PhotoImage(file="img/b_queen.png")
         self.w_pawn = tk.PhotoImage(file="img/w_pawn.png")
         self.b_pawn = tk.PhotoImage(file="img/b_pawn.png")
-
         # list for stockage pieces
         self.pieces_list = [
             [Piece("none", "empty") for col in range(8)] for row in range(8)
         ]
         self.images_list = [["None" for col in range(8)] for row in range(8)]
-
         self.id = None
         self.coordination = coordination
-        # self.b_name = board_name
-
         self.create_list()
-        # self.image = tk.PhotoImage(file="img/b_pawn.png")
 
     def install_in(self, canvas):
         """Création de chessboard."""
@@ -140,8 +135,6 @@ class Board:
             else:
                 self.color = "#815426"
 
-        # print(self.board_initial)
-
     def create_list(self):
         for row in range(8):
             for col in range(8):
@@ -174,9 +167,7 @@ class Board:
                     self.pieces_list[row][col] = Piece("none", "empty")
 
     def install_pieces(self, canvas):
-        """set up pieces."""
-        # canvas.create_image(0, 0, anchor=NW, image=self.w_pawn)
-        # self.images = list()
+        """Set up pieces."""
         for row in range(8):
             y = (SIZE * (row + 1)) + 8
             # new = []
@@ -222,22 +213,20 @@ class Board:
             # reset position x,y
             x = 0
             y = 0
-            # self.images_list.append(new)
-
-    # def update_count(self):
-    #     self.count_step += 1
-    #     print(self.count_step)
 
     def return_turn(self):
+        """Return turn for class Chess."""
         return self.turn
 
     def change_turn(self):
+        """Change turn of player."""
         if self.turn == 0:
             self.turn = 1
         else:
             self.turn = 0
 
     def remove(self, canvas, old_row, old_col, new_row, new_col, new_name):
+        """Remove piece."""
         canvas.delete(self.images_list[old_row][old_col])
         self.images_list[old_row][old_col] = "None"
         self.pieces_list[old_row][old_col] = Piece("none", "empty")
@@ -246,6 +235,7 @@ class Board:
             self.images_list[new_row][new_col] = "None"
 
     def reset(self, canvas, image, old_color, old_name, new_row, new_col):
+        """Reset piece."""
         x = (SIZE * (new_col + 1)) + 8
         y = (SIZE * (new_row + 1)) + 8
         self.id = canvas.create_image(x, y, anchor=NW, image=image)
@@ -254,14 +244,12 @@ class Board:
         # self.update_count()
 
     def check_legal(self, canvas, old_row, old_col, new_row, new_col):
+        """Check if move is legal."""
 
         self.old_name = self.pieces_list[old_row][old_col].return_name()
         self.new_name = self.pieces_list[new_row][new_col].return_name()
         self.old_color = self.pieces_list[old_row][old_col].return_color()
         self.new_color = self.pieces_list[new_row][new_col].return_color()
-
-        # print(self.old_color, self.old_name)
-        # print(self.new_color, self.new_name)
 
         # check if your turn
         if (self.turn == 0 and self.old_color == "black") or (
@@ -466,6 +454,8 @@ class Board:
         new_color,
         new_name,
     ):
+        """Check if move of pawn is legal."""
+
         if old_color == "white":
             if new_name == "empty" and old_col == new_col:
                 if old_row == new_row + 1:
@@ -528,6 +518,7 @@ class Board:
         new_color,
         new_name,
     ):
+        """Check if move of king is legal."""
 
         if old_col == new_col:
             if (old_row == new_row + 1) or (old_row == new_row - 1):
@@ -551,6 +542,7 @@ class Board:
         new_color,
         new_name,
     ):
+        """Check if move of rook is legal."""
         if old_row == new_row:
             # move to right
             if old_col < new_col:
@@ -604,6 +596,7 @@ class Board:
         new_color,
         new_name,
     ):
+        """Check if move of bishop is legal."""
         # the absolute value for check diagonal
         self.absolute_row = abs(old_row - new_row)
         self.absolute_col = abs(old_col - new_col)
@@ -679,6 +672,7 @@ class Board:
         new_color,
         new_name,
     ):
+        """Check if move of knight is legal."""
 
         if (old_row == new_row + 2) or (old_row == new_row - 2):
             if (old_col == new_col + 1) or (old_col == new_col - 1):
@@ -700,6 +694,7 @@ class Board:
         new_color,
         new_name,
     ):
+        """Check if move of queen is legal."""
         if old_row == new_row:
             # move to right
             if old_col < new_col:
@@ -801,26 +796,10 @@ class Board:
             return False
 
 
-# class Piece:
-#     def __init__(self, color, type, canvas,x,y):
-#         # self.height = height
-#         # self.width = width
-#         self.color = color
-#         self.type = type
-#         self.canvas = canvas
-
-
 class Piece:
     def __init__(self, color, name):
         self.color = color
         self.name = name
-
-    # def set_image(self):
-    #     if self.color == "white":
-    #         file_name = "img/" + "w_" + self.name + ".png"
-    #     else:
-    #         file_name = "img/" + "b_" + self.name + ".png"
-    #     return file_name
 
     def return_name(self):
         return self.name
@@ -917,9 +896,6 @@ class Game:
         self.canvas.create_image(0, 0, image=self.ecran, tags="image", anchor="nw")
         self.board.install_in(self.canvas)
         self.board.install_pieces(self.canvas)
-
-        # self.pieces.install_in(self.canvas)
-        # self.pieces.move(self.canvas)
 
     def start_animation(self):
         """Appeler la création des bases au méthode start()."""
