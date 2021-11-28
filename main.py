@@ -594,44 +594,63 @@ class Board:
         new_color,
         new_name,
     ):
+        # the absolute value for check diagonal
+        self.absolute_row = abs(old_row - new_row)
+        self.absolute_col = abs(old_col - new_col)
+
         # move to up right
         if (old_row > new_row) and (old_col < new_col):
             if (old_row == new_row + 1) and (old_col == new_col - 1):
                 return True
-            else:
+            # check diagonal
+            elif self.absolute_row == self.absolute_col:
                 for i in range(old_col + 1, new_col):
                     old_row -= 1
                     if self.pieces_list[old_row][i].return_name() != "empty":
                         return False
+            else:
+                return False
         # move to up left
         if (old_row > new_row) and (old_col > new_col):
             if (old_row == new_row + 1) and (old_col == new_col + 1):
                 return True
-            else:
+            # check diagonal
+            elif self.absolute_row == self.absolute_col:
                 for i in range(old_col - 1, new_col, -1):
                     old_row -= 1
                     if self.pieces_list[old_row][i].return_name() != "empty":
                         return False
+            else:
+                return False
 
         # move to down right
         if (old_row < new_row) and (old_col < new_col):
             if (old_row == new_row - 1) and (old_col == new_col - 1):
                 return True
-            else:
+            # check diagonal
+            elif self.absolute_row == self.absolute_col:
                 for i in range(old_col + 1, new_col):
                     old_row += 1
                     if self.pieces_list[old_row][i].return_name() != "empty":
                         return False
+            else:
+                return False
 
         # move to left right
         if (old_row < new_row) and (old_col > new_col):
             if (old_row == new_row - 1) and (old_col == new_col + 1):
                 return True
-            else:
+            # check diagonal
+            elif self.absolute_row == self.absolute_col:
+                print("enter")
                 for i in range(old_col - 1, new_col, -1):
+
                     old_row += 1
                     if self.pieces_list[old_row][i].return_name() != "empty":
                         return False
+            else:
+                return False
+
         else:
             return False
         return True
