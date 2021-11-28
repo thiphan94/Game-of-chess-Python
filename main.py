@@ -22,8 +22,13 @@ from tkinter import messagebox
 SIZE = 64
 from tkinter import *
 
+global count
+count = 0
+
 
 class Board:
+    """ class for chessboard"""
+
     def __init__(self, height, width, color="#815426"):
         self.height = height
         self.width = width
@@ -219,9 +224,9 @@ class Board:
             y = 0
             # self.images_list.append(new)
 
-    def update_count(self):
-        self.count_step += 1
-        print(self.count_step)
+    # def update_count(self):
+    #     self.count_step += 1
+    #     print(self.count_step)
 
     def return_turn(self):
         return self.turn
@@ -246,7 +251,7 @@ class Board:
         self.id = canvas.create_image(x, y, anchor=NW, image=image)
         self.images_list[new_row][new_col] = self.id
         self.pieces_list[new_row][new_col] = Piece(old_color, old_name)
-        self.update_count()
+        # self.update_count()
 
     def check_legal(self, canvas, old_row, old_col, new_row, new_col):
 
@@ -691,28 +696,47 @@ class Game:
         height = 1024
         self.frame = frame
         self.turn = 0
-        self.sec = 0
+        # self.sec = 0
+        self.white_count = 0
+        self.black_count = 0
         self.canvas = tk.Canvas(self.frame, width=width, height=height)
         self.canvas.pack(side="top", fill="both", expand=True)
         self.ecran = tk.PhotoImage(file="w2.png")
         self.board = Board(width, height)
         self.coordination = coordination
-        # self.matrix = board_name
         self.valid_case = valid_case
         self.lbl = tk.Label(self.frame, text="")
-        # Clock
-        self.time_info = tk.Label(
-            self.frame, text="You are 300s of your turn!", font=("Arial", 20)
+        # Clock for White
+        self.time_white = tk.Label(
+            self.frame, text="Timer for White:", font=("Arial", 20)
         ).place(x=670, y=10)
-        self.time = tk.Label(self.frame, text="Timer", font=("Arial", 20)).place(
-            x=670, y=50
-        )
-        self.displaytime = tk.Label(text="", font=("Arial", 20), fg="black")
-        self.displaytime.place(x=770, y=50)
+        self.wc = StringVar()
+        self.wc.set("00:00:00")
+        self.wlb = Label(
+            self.frame, textvariable=self.wc, font=("Arial", 20), bg="white"
+        ).place(x=900, y=10)
+
+        # Clock for Black
+        self.time_black = tk.Label(
+            self.frame, text="Timer for Black:", font=("Arial", 20)
+        ).place(x=670, y=60)
+        self.bc = StringVar()
+        self.bc.set("00:00:00")
+        self.blb = Label(
+            self.frame, textvariable=self.bc, font=("Arial", 20), bg="white"
+        ).place(x=900, y=50)
+        # self.time_info = tk.Label(
+        #     self.frame, text="You are 300s of your turn!", font=("Arial", 20)
+        # ).place(x=670, y=10)
+        # self.time = tk.Label(self.frame, text="Timer", font=("Arial", 20)).place(
+        #     x=670, y=50
+        # )
+        # self.displaytime = tk.Label(text="", font=("Arial", 20), fg="black")
+        # self.displaytime.place(x=770, y=50)
 
         # display turn of player
         self.my_var = StringVar()
-        self.my_var.set("Turn of White")
+        self.my_var.set("It's turn of White!")
         self.displayturn1 = tk.Label(
             self.frame, textvariable=self.my_var, font=("Arial", 25)
         )
@@ -742,12 +766,12 @@ class Game:
         ).place(x=450, y=750, height=30, width=100)
 
         # clock
-        self.update_clock()
+        # self.update_clock()
+        self.start_whiteclock()
 
     def start(self):
-        """Commencer à créer défender, aliens, bunkers."""
+        """Create background and install chessboard and pieces."""
         self.canvas.create_image(0, 0, image=self.ecran, tags="image", anchor="nw")
-
         self.board.install_in(self.canvas)
         self.board.install_pieces(self.canvas)
 
@@ -758,19 +782,104 @@ class Game:
         """Appeler la création des bases au méthode start()."""
         self.start()
 
+    def start_whiteclock(self):
+        """Start or reset clock of White."""
+        self.white_count = 0
+        self.white_timer()
+
+    def stop_whiteclock(self):
+        """Stop clock of White."""
+        self.white_count = 1
+
+    def start_blackclock(self):
+        """Start or reset clock of White."""
+        self.black_count = 0
+        self.black_timer()
+
+    def stop_blackclock(self):
+        """Stop clock of White."""
+        self.black_count = 1
+
+    def white_timer(self):
+        """Time calculator of White."""
+        if self.white_count == 0:
+            self.d = str(self.wc.get())
+            h, m, s = map(int, self.d.split(":"))
+            h = int(h)
+            m = int(m)
+            s = int(s)
+            if s < 59:
+                s += 1
+            elif s == 59:
+                s = 0
+                if m < 59:
+                    m += 1
+                elif m == 59:
+                    m = 0
+                    h += 1
+            if h < 10:
+                h = str(0) + str(h)
+            else:
+                h = str(h)
+            if m < 10:
+                m = str(0) + str(m)
+            else:
+                m = str(m)
+            if s < 10:
+                s = str(0) + str(s)
+            else:
+                s = str(s)
+            self.d = h + ":" + m + ":" + s
+            self.wc.set(self.d)
+            self.frame.after(1000, self.white_timer)
+
+    def black_timer(self):
+        """Time calculator of Black."""
+        if self.black_count == 0:
+            self.d = str(self.bc.get())
+            h, m, s = map(int, self.d.split(":"))
+            h = int(h)
+            m = int(m)
+            s = int(s)
+            if s < 59:
+                s += 1
+            elif s == 59:
+                s = 0
+                if m < 59:
+                    m += 1
+                elif m == 59:
+                    m = 0
+                    h += 1
+            if h < 10:
+                h = str(0) + str(h)
+            else:
+                h = str(h)
+            if m < 10:
+                m = str(0) + str(m)
+            else:
+                m = str(m)
+            if s < 10:
+                s = str(0) + str(s)
+            else:
+                s = str(s)
+            self.d = h + ":" + m + ":" + s
+            self.bc.set(self.d)
+            self.frame.after(1000, self.black_timer)
+
+    # find index of row and column
     def find_indexcase(self, element, matrix):
         for i in range(len(matrix)):
             for j in range(len(matrix[i])):
                 if matrix[i][j] == element:
                     return i, j
 
-    def update_clock(self):
-        """Mettre à jour le temps."""
-        self.sec = self.sec + 1
-        self.displaytime.configure(text=self.sec)
-        self.canvas.after(1000, self.update_clock)
-        while self.sec == 300:
-            self.sec = 0
+    # def update_clock(self):
+    #     """Mettre à jour le temps."""
+    #     self.sec = self.sec + 1
+    #     self.displaytime.configure(text=self.sec)
+    #     self.canvas.after(1000, self.update_clock)
+    #     while self.sec == 300:
+    #         self.sec = 0
 
     # update and display turn of player!
     def update_turn(self):
@@ -803,7 +912,14 @@ class Game:
                 self.canvas, self.old_row, self.old_col, self.new_row, self.new_col
             ):
                 self.turn = self.board.return_turn()
+                if self.turn == 1:
+                    self.stop_whiteclock()
+                    self.start_blackclock()
+                else:
+                    self.stop_blackclock()
+                    self.start_whiteclock()
                 self.update_turn()
+
             else:
                 messagebox.showerror(
                     "Error MessageBox", "An illegal move! Please make a legal move!"
