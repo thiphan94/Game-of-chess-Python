@@ -241,8 +241,10 @@ class Board:
                     if self.wk_location in check_list:
                         print("co ton tai")
                         self.white_checked = True
+                        self.return_update(
+                            old_color, old_name, old_row, old_col, new_row, new_col
+                        )
                         return True
-
             self.return_update(old_color, old_name, old_row, old_col, new_row, new_col)
             self.white_checked = False
             return False
@@ -260,55 +262,13 @@ class Board:
                     if self.bk_location in check_list:
                         print("co ton tai")
                         self.black_checked = True
+                        self.return_update(
+                            old_color, old_name, old_row, old_col, new_row, new_col
+                        )
                         return True
-
             self.return_update(old_color, old_name, old_row, old_col, new_row, new_col)
             self.black_checked = False
             return False
-
-        # if old_color == "white":
-        #     self.kr = self.wk_location[0]
-        #     self.kc = self.wk_location[1]
-        #     self.br = 0
-        #     self.bc = 0
-        #     for i in range(8):
-        #         for j in range(8):
-        #             if (i == self.kr or j == self.kc) and self.pieces_list[i][
-        #                 j
-        #             ].return_color() == "black":
-        #                 self.white_checked = True
-        #             elif (
-        #                 abs(i - self.kr) == abs(j - self.kc)
-        #                 and self.pieces_list[i][j].return_color() == "black"
-        #             ):
-        #                 self.white_checked = True
-        #             elif (
-        #                 i == self.kr - 2
-        #                 and (j == self.kc - 1 or j == self.kc + 1)
-        #                 and self.pieces_list[i][j].return_color() == "black"
-        #             ):
-        #                 self.white_checked = True
-        #
-        #             elif (
-        #                 i == self.kr + 2
-        #                 and (j == self.kc - 1 or j == self.kc + 1)
-        #                 and self.pieces_list[i][j].return_color() == "black"
-        #             ):
-        #                 self.white_checked = True
-        #
-        #             elif (
-        #                 i == self.kr - 1
-        #                 and (j == self.kc - 2 or j == self.kc + 2)
-        #                 and self.pieces_list[i][j].return_color() == "black"
-        #             ):
-        #                 self.white_checked = True
-        #
-        #             elif (
-        #                 i == self.kr + 1
-        #                 and (j == self.kc - 2 or j == self.kc + 2)
-        #                 and self.pieces_list[i][j].return_color() == "black"
-        #             ):
-        #                 self.white_checked = True
 
     def list_moves(self, old_row, old_col, old_color, old_name):
         ml = []
@@ -891,6 +851,8 @@ class Board:
         new_name,
     ):
         """Check if move of queen is legal."""
+        self.absolute_row = abs(old_row - new_row)
+        self.absolute_col = abs(old_col - new_col)
         if old_row == new_row:
             # move to right
             if old_col < new_col:
@@ -900,7 +862,7 @@ class Board:
                     for i in range(old_col + 1, new_col):
                         if self.pieces_list[old_row][i].return_name() != "empty":
                             return False
-
+                    return True
             # move to left
             elif old_col > new_col:
                 if old_col == new_col + 1:
@@ -909,7 +871,7 @@ class Board:
                     for i in range(old_col - 1, new_col, -1):
                         if self.pieces_list[old_row][i].return_name() != "empty":
                             return False
-                return True
+                    return True
 
         elif old_col == new_col:
             # move up
