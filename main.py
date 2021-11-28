@@ -404,15 +404,6 @@ class Board:
                 self.old_name,
                 self.new_color,
                 self.new_name,
-            ) and self.check_bishop(
-                old_row,
-                old_col,
-                new_row,
-                new_col,
-                self.old_color,
-                self.old_name,
-                self.new_color,
-                self.new_name,
             ):
                 self.remove(
                     canvas,
@@ -560,6 +551,7 @@ class Board:
                     for i in range(old_col - 1, new_col, -1):
                         if self.pieces_list[old_row][i].return_name() != "empty":
                             return False
+                return True
 
         elif old_col == new_col:
             # move up
@@ -578,10 +570,9 @@ class Board:
                     for i in range(old_row + 1, new_row):
                         if self.pieces_list[i][old_col].return_name() != "empty":
                             return False
-
+                return True
         else:
             return False
-        return True
 
     def check_bishop(
         self,
@@ -608,6 +599,7 @@ class Board:
                     old_row -= 1
                     if self.pieces_list[old_row][i].return_name() != "empty":
                         return False
+                return True
             else:
                 return False
         # move to up left
@@ -620,6 +612,7 @@ class Board:
                     old_row -= 1
                     if self.pieces_list[old_row][i].return_name() != "empty":
                         return False
+                return True
             else:
                 return False
 
@@ -633,6 +626,7 @@ class Board:
                     old_row += 1
                     if self.pieces_list[old_row][i].return_name() != "empty":
                         return False
+                return True
             else:
                 return False
 
@@ -648,12 +642,12 @@ class Board:
                     old_row += 1
                     if self.pieces_list[old_row][i].return_name() != "empty":
                         return False
+                return True
             else:
                 return False
 
         else:
             return False
-        return True
 
     def check_knight(
         self,
@@ -673,6 +667,117 @@ class Board:
         elif (old_col == new_col + 2) or (old_col == new_col - 2):
             if (old_row == new_row + 1) or (old_row == new_row - 1):
                 return True
+        else:
+            return False
+
+    def check_queen(
+        self,
+        old_row,
+        old_col,
+        new_row,
+        new_col,
+        old_color,
+        old_name,
+        new_color,
+        new_name,
+    ):
+        if old_row == new_row:
+            # move to right
+            if old_col < new_col:
+                if old_col == new_col + 1:
+                    return True
+                else:
+                    for i in range(old_col + 1, new_col):
+                        if self.pieces_list[old_row][i].return_name() != "empty":
+                            return False
+
+            # move to left
+            elif old_col > new_col:
+                if old_col == new_col + 1:
+                    return True
+                else:
+                    for i in range(old_col - 1, new_col, -1):
+                        if self.pieces_list[old_row][i].return_name() != "empty":
+                            return False
+                return True
+
+        elif old_col == new_col:
+            # move up
+            if old_row > new_row:
+                if old_row == new_row + 1:
+                    return True
+                else:
+                    for i in range(old_row - 1, new_row, -1):
+                        if self.pieces_list[i][old_col].return_name() != "empty":
+                            return False
+                    return True
+            # move down
+            if old_row < new_row:
+                if old_row == new_row - 1:
+                    return True
+                else:
+                    for i in range(old_row + 1, new_row):
+                        if self.pieces_list[i][old_col].return_name() != "empty":
+                            return False
+                    return True
+
+        # move to up right
+        elif (old_row > new_row) and (old_col < new_col):
+            if (old_row == new_row + 1) and (old_col == new_col - 1):
+                return True
+            # check diagonal
+            elif self.absolute_row == self.absolute_col:
+                for i in range(old_col + 1, new_col):
+                    old_row -= 1
+                    if self.pieces_list[old_row][i].return_name() != "empty":
+                        return False
+                return True
+            else:
+                return False
+        # move to up left
+        elif (old_row > new_row) and (old_col > new_col):
+            if (old_row == new_row + 1) and (old_col == new_col + 1):
+                return True
+            # check diagonal
+            elif self.absolute_row == self.absolute_col:
+                for i in range(old_col - 1, new_col, -1):
+                    old_row -= 1
+                    if self.pieces_list[old_row][i].return_name() != "empty":
+                        return False
+                return True
+            else:
+                return False
+
+        # move to down right
+        elif (old_row < new_row) and (old_col < new_col):
+            if (old_row == new_row - 1) and (old_col == new_col - 1):
+                return True
+            # check diagonal
+            elif self.absolute_row == self.absolute_col:
+                for i in range(old_col + 1, new_col):
+                    old_row += 1
+                    if self.pieces_list[old_row][i].return_name() != "empty":
+                        return False
+                return True
+            else:
+                return False
+
+        # move to left right
+        elif (old_row < new_row) and (old_col > new_col):
+            if (old_row == new_row - 1) and (old_col == new_col + 1):
+                return True
+            # check diagonal
+            elif self.absolute_row == self.absolute_col:
+                print("enter")
+                for i in range(old_col - 1, new_col, -1):
+
+                    old_row += 1
+                    if self.pieces_list[old_row][i].return_name() != "empty":
+                        return False
+                return True
+            else:
+                return False
+
         else:
             return False
 
