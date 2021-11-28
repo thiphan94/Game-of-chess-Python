@@ -229,7 +229,7 @@ class Board:
         new_color,
         new_name,
     ):
-        if old_color == "white":
+        if old_color == "white" and old_name != "king":
             self.update_temporary(
                 old_color, old_name, old_row, old_col, new_row, new_col
             )
@@ -239,7 +239,8 @@ class Board:
                     name = self.pieces_list[i][j].return_name()
                     check_list = self.list_moves(i, j, color, name)
                     if self.wk_location in check_list:
-                        print("co ton tai")
+                        print("location of white king:", self.wk_location)
+                        print("co ton tai in white")
                         self.white_checked = True
                         self.return_update(
                             old_color, old_name, old_row, old_col, new_row, new_col
@@ -248,7 +249,7 @@ class Board:
             self.return_update(old_color, old_name, old_row, old_col, new_row, new_col)
             self.white_checked = False
             return False
-        else:
+        elif old_color == "black" and old_name != "king":
             self.update_temporary(
                 old_color, old_name, old_row, old_col, new_row, new_col
             )
@@ -260,7 +261,8 @@ class Board:
                     check_list = self.list_moves(i, j, color, name)
                     # print("list den", check_list)
                     if self.bk_location in check_list:
-                        print("co ton tai")
+                        print("location of black king:", self.bk_location)
+                        print("co ton tai in black")
                         self.black_checked = True
                         self.return_update(
                             old_color, old_name, old_row, old_col, new_row, new_col
@@ -453,6 +455,7 @@ class Board:
                 return True
         elif self.old_name == "king":
             print(self.list_moves(old_row, old_col, self.old_color, self.old_name))
+            print("location of black king test2:", self.bk_location)
             if self.check_king(
                 old_row,
                 old_col,
@@ -473,12 +476,10 @@ class Board:
                 )
                 if self.old_color == "white":
                     self.image = self.w_king
-                    self.wk_location[0] = new_row
-                    self.wk_location[1] = new_col
+                    self.wk_location = (new_row, new_col)
                 else:
                     self.image = self.b_king
-                    self.bk_location[0] = new_row
-                    self.bk_location[1] = new_col
+                    self.bk_location = (new_row, new_col)
 
                 self.update_move(
                     canvas, self.image, self.old_color, self.old_name, new_row, new_col
@@ -804,7 +805,7 @@ class Board:
                 return True
             # check diagonal
             elif self.absolute_row == self.absolute_col:
-                print("enter")
+
                 for i in range(old_col - 1, new_col, -1):
 
                     old_row += 1
@@ -940,7 +941,7 @@ class Board:
                 return True
             # check diagonal
             elif self.absolute_row == self.absolute_col:
-                print("enter")
+
                 for i in range(old_col - 1, new_col, -1):
 
                     old_row += 1
