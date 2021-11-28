@@ -390,7 +390,7 @@ class Board:
                 return True
 
         elif self.old_name == "queen":
-            if self.check_rook(
+            if self.check_queen(
                 old_row,
                 old_col,
                 new_row,
@@ -574,6 +574,8 @@ class Board:
                         if self.pieces_list[i][old_col].return_name() != "empty":
                             return False
 
+        else:
+            return False
         return True
 
     def check_bishop(
@@ -625,6 +627,8 @@ class Board:
                     old_row += 1
                     if self.pieces_list[old_row][i].return_name() != "empty":
                         return False
+        else:
+            return False
         return True
 
     def check_knight(
