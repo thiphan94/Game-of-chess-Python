@@ -34,8 +34,11 @@ class Board:
         self.width = width
         self.color = color
         self.turn = 0
-        self.passant = 0
-        self.count_step = 0
+        self.passant = False
+        self.count_blackstep = 0
+        self.count_whitestep = 0
+        self.wk_live = True
+        self.bk_live = True
 
         self.a = tk.PhotoImage(file="img/a.png")
         self.b = tk.PhotoImage(file="img/b.png")
@@ -254,8 +257,6 @@ class Board:
                     if old_name == "king":
                         self.wk_location = (new_row, new_col)
                     if self.wk_location in check_list:
-                        # print("location of white king:", self.wk_location)
-                        # print("co ton tai in white")
                         self.white_checked = True
                         self.return_update(
                             old_color, old_name, old_row, old_col, new_row, new_col
@@ -268,18 +269,15 @@ class Board:
             self.update_temporary(
                 old_color, old_name, old_row, old_col, new_row, new_col
             )
-            # print("black")
+
             for i in range(8):
                 for j in range(8):
                     color = self.pieces_list[i][j].return_color()
                     name = self.pieces_list[i][j].return_name()
                     check_list = self.list_moves(i, j, color, name)
-                    # print("list den", check_list)
                     if old_name == "king":
                         self.bk_location = (new_row, new_col)
                     if self.bk_location in check_list:
-                        # print("location of black king:", self.bk_location)
-                        # print("co ton tai in black")
                         self.black_checked = True
                         self.return_update(
                             old_color, old_name, old_row, old_col, new_row, new_col
@@ -398,7 +396,9 @@ class Board:
         else:
             self.turn = 0
 
-    def remove(self, canvas, old_row, old_col, new_row, new_col, new_name):
+    def remove(
+        self, canvas, old_row, old_col, new_row, new_col, old_color, old_name, new_name
+    ):
         """Remove piece."""
         canvas.delete(self.images_list[old_row][old_col])
         self.images_list[old_row][old_col] = "None"
@@ -406,6 +406,10 @@ class Board:
         if new_name != "empty":
             canvas.delete(self.images_list[new_row][new_col])
             self.images_list[new_row][new_col] = "None"
+        elif new_name == "empty" and old_name == "pawn":
+            canvas.delete(self.images_list[old_row][new_col])
+            self.images_list[old_row][new_col] = "None"
+            self.pieces_list[old_row][new_col] = Piece("none", "empty")
 
     def update_move(self, canvas, image, old_color, old_name, new_row, new_col):
         """Reset piece."""
@@ -447,11 +451,10 @@ class Board:
             self.new_color,
             self.new_name,
         ):
-            # print("error")
+
             return False
 
         if self.old_name == "pawn":
-            # print(self.list_moves(old_row, old_col, self.old_color, self.old_name))
             if self.check_pawn(
                 old_row,
                 old_col,
@@ -468,12 +471,16 @@ class Board:
                     old_col,
                     new_row,
                     new_col,
+                    self.old_color,
+                    self.old_name,
                     self.new_name,
                 )
                 if self.old_color == "white":
                     self.image = self.w_pawn
+                    self.count_whitestep += 1
                 else:
                     self.image = self.b_pawn
+                    self.count_blackstep += 1
                 self.update_move(
                     canvas, self.image, self.old_color, self.old_name, new_row, new_col
                 )
@@ -481,8 +488,6 @@ class Board:
 
                 return True
         elif self.old_name == "king":
-            # print(self.list_moves(old_row, old_col, self.old_color, self.old_name))
-            # print("location of black king test2:", self.bk_location)
             if self.check_king(
                 old_row,
                 old_col,
@@ -499,6 +504,8 @@ class Board:
                     old_col,
                     new_row,
                     new_col,
+                    self.old_color,
+                    self.old_name,
                     self.new_name,
                 )
                 if self.old_color == "white":
@@ -512,11 +519,9 @@ class Board:
                     canvas, self.image, self.old_color, self.old_name, new_row, new_col
                 )
                 self.change_turn()
-                # print(self.turn)
                 return True
 
         elif self.old_name == "rook":
-            # print(self.list_moves(old_row, old_col, self.old_color, self.old_name))
             if self.check_rook(
                 old_row,
                 old_col,
@@ -533,6 +538,8 @@ class Board:
                     old_col,
                     new_row,
                     new_col,
+                    self.old_color,
+                    self.old_name,
                     self.new_name,
                 )
                 if self.old_color == "white":
@@ -544,12 +551,9 @@ class Board:
                 )
                 self.change_turn()
                 self.count_step += 1
-                # print(self.turn)
-
                 return True
 
         elif self.old_name == "bishop":
-            # print(self.list_moves(old_row, old_col, self.old_color, self.old_name))
             if self.check_bishop(
                 old_row,
                 old_col,
@@ -566,6 +570,8 @@ class Board:
                     old_col,
                     new_row,
                     new_col,
+                    self.old_color,
+                    self.old_name,
                     self.new_name,
                 )
                 if self.old_color == "white":
@@ -576,11 +582,9 @@ class Board:
                     canvas, self.image, self.old_color, self.old_name, new_row, new_col
                 )
                 self.change_turn()
-                print(self.turn)
                 return True
 
         elif self.old_name == "queen":
-            # print(self.list_moves(old_row, old_col, self.old_color, self.old_name))
             if self.check_queen(
                 old_row,
                 old_col,
@@ -597,6 +601,8 @@ class Board:
                     old_col,
                     new_row,
                     new_col,
+                    self.old_color,
+                    self.old_name,
                     self.new_name,
                 )
                 if self.old_color == "white":
@@ -607,10 +613,8 @@ class Board:
                     canvas, self.image, self.old_color, self.old_name, new_row, new_col
                 )
                 self.change_turn()
-                print(self.turn)
                 return True
         elif self.old_name == "knight":
-            # print(self.list_moves(old_row, old_col, self.old_color, self.old_name))
             if self.check_knight(
                 old_row,
                 old_col,
@@ -627,6 +631,8 @@ class Board:
                     old_col,
                     new_row,
                     new_col,
+                    self.old_color,
+                    self.old_name,
                     self.new_name,
                 )
                 if self.old_color == "white":
@@ -637,7 +643,6 @@ class Board:
                     canvas, self.image, self.old_color, self.old_name, new_row, new_col
                 )
                 self.change_turn()
-                # print(self.turn)
                 return True
 
         return False
@@ -663,7 +668,16 @@ class Board:
                     for i in range(old_row - 1, new_row, -1):
                         if self.pieces_list[i][old_col].return_name() != "empty":
                             return False
+                    self.passant = True
                     return True
+            elif (
+                new_name == "empty"
+                and old_row == 3
+                and (old_col == new_col + 1 or old_col == new_col - 1)
+                and self.passant
+                and self.count_whitestep == self.count_blackstep
+            ):
+                return True
 
             elif new_name != "empty" and old_row == new_row + 1:
                 if old_col == new_col:
@@ -682,7 +696,17 @@ class Board:
                     for i in range(old_row + 1, new_row):
                         if self.pieces_list[i][old_col].return_name() != "empty":
                             return False
+                    self.passant = True
                     return True
+
+            elif (
+                new_name == "empty"
+                and old_row == 4
+                and (old_col == new_col + 1 or old_col == new_col - 1)
+                and self.passant
+                and self.count_whitestep == self.count_blackstep + 1
+            ):
+                return True
 
             elif new_name != "empty" and old_row == new_row - 1:
                 if old_col == new_col:
@@ -1193,14 +1217,10 @@ class Game:
             self.my_var.set("Turn of Black")
         else:
             self.my_var.set("Turn of White")
-        # print("inupdate", self.turn)
 
     def get_move(self):
         self.value_from = self.player_input1.get().upper()
         self.value_to = self.player_input2.get().upper()
-        #
-        # print(self.turn)
-        # print(self.value_from, self.value_to)
 
         if (self.value_from in self.valid_case) and (self.value_to in self.valid_case):
 
