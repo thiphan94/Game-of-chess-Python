@@ -1,15 +1,3 @@
-# board_name = [
-#     ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"],
-#     ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
-#     ["no", "no", "no", "no", "no", "no", "no", "no"],
-#     ["no", "no", "no", "no", "no", "no", "no", "no"],
-#     ["no", "no", "no", "no", "no", "no", "no", "no"],
-#     ["no", "no", "no", "no", "no", "no", "no", "no"],
-#     ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
-#     ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"],
-# ]
-
-
 coordination = [
     ["A8", "B8", "C8", "D8", "E8", "F8", "G8", "H8"],
     ["A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7"],

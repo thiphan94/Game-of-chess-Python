@@ -245,7 +245,7 @@ class Board:
         new_color,
         new_name,
     ):
-        """Check if KIng is checked."""
+        """Check if King is checked."""
         if old_color == "white":
             self.update_temporary(
                 old_color, old_name, old_row, old_col, new_row, new_col
@@ -1029,7 +1029,6 @@ class Game:
         height = 1024
         self.frame = frame
         self.turn = 0
-        # self.sec = 0
         self.white_count = 0
         self.black_count = 0
         self.canvas = tk.Canvas(self.frame, width=width, height=height)
@@ -1058,15 +1057,6 @@ class Game:
         self.blb = Label(
             self.frame, textvariable=self.bc, font=("Arial", 20), bg="white"
         ).place(x=900, y=50)
-        # self.time_info = tk.Label(
-        #     self.frame, text="You are 300s of your turn!", font=("Arial", 20)
-        # ).place(x=670, y=10)
-        # self.time = tk.Label(self.frame, text="Timer", font=("Arial", 20)).place(
-        #     x=670, y=50
-        # )
-        # self.displaytime = tk.Label(text="", font=("Arial", 20), fg="black")
-        # self.displaytime.place(x=770, y=50)
-
         # display turn of player
         self.my_var = StringVar()
         self.my_var.set("It's turn of White!")
@@ -1134,6 +1124,10 @@ class Game:
             self.end_game("White")
         elif self.winner == "Black":
             self.end_game("Black")
+
+    def reset_timer(self):
+        self.wc.set("00:00:00")
+        self.bc.set("00:00:00")
 
     def start_whiteclock(self):
         """Start or reset clock of White."""
@@ -1280,6 +1274,7 @@ class Game:
         )
 
     def delete_pieces(self):
+        """Remove all pieces in chessboard."""
         for i in range(8):
             for j in range(8):
                 self.canvas.delete(self.board.images_list[i][j])
@@ -1287,8 +1282,29 @@ class Game:
                 self.board.pieces_list[i][j] = Piece("none", "empty")
 
     def reset_chessboard(self):
+        """Reset chessboard."""
+        self.turn = 0
+        self.white_count = 0
+        self.black_count = 1
+
+        self.board.turn = 0
+        self.board.passant = False
+        self.board.count_blackstep = 0
+        self.board.count_whitestep = 0
+        self.board.wk_live = True
+        self.board.bk_live = True
+
+        self.board.id = None
+        self.board.coordination = coordination
+        self.board.white_checked = False
+        self.board.black_checked = False
+        self.board.bk_location = (0, 4)
+        self.board.wk_location = (7, 4)
+        self.update_turn()
         self.board.create_list()
         self.board.install_pieces(self.canvas)
+        self.reset_timer()
+        self.start_whiteclock()
 
 
 class Chess:
