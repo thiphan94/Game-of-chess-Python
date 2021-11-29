@@ -145,7 +145,6 @@ class Board:
     def create_list(self):
         for row in range(8):
             for col in range(8):
-
                 if row == 1:
                     self.pieces_list[row][col] = Piece("black", "pawn")
                 elif row == 6:
@@ -221,18 +220,19 @@ class Board:
             x = 0
             y = 0
 
-    def enpassant(
-        self,
-        old_row,
-        old_col,
-        new_row,
-        new_col,
-        old_color,
-        old_name,
-        new_color,
-        new_name,
-    ):
-        pass
+    def check_kinglive(self):
+        """Check king."""
+        for row in range(8):
+            for col in range(8):
+                if self.pieces_list[row][col].return_name == "king":
+                    if self.pieces_list[row][col].return_color == "white":
+                        self.wk_live = True
+                    else:
+                        self.bk_live = True
+        if self.wk_live == False:
+            return "Black"
+        elif self.bk_live == False:
+            return "White"
 
     def ischecked(
         self,
@@ -245,6 +245,7 @@ class Board:
         new_color,
         new_name,
     ):
+        """Check if KIng is checked."""
         if old_color == "white":
             self.update_temporary(
                 old_color, old_name, old_row, old_col, new_row, new_col
@@ -550,7 +551,6 @@ class Board:
                     canvas, self.image, self.old_color, self.old_name, new_row, new_col
                 )
                 self.change_turn()
-                self.count_step += 1
                 return True
 
         elif self.old_name == "bishop":
@@ -1038,7 +1038,7 @@ class Game:
         self.board = Board(width, height)
         self.coordination = coordination
         self.valid_case = valid_case
-        self.lbl = tk.Label(self.frame, text="")
+
         # Clock for White
         self.time_white = tk.Label(
             self.frame, text="Timer for White:", font=("Arial", 20)
@@ -1098,8 +1098,23 @@ class Game:
             self.frame, text="Ok", font=("Arial", 15), command=lambda: self.get_move()
         ).place(x=450, y=750, height=30, width=100)
 
+        # Button remove all pieces
+        self.btn_remove = tk.Button(
+            self.frame,
+            text="Remove all pieces",
+            font=("Arial", 15),
+            command=lambda: self.delete_pieces(),
+        ).place(x=800, y=700, height=50, width=180)
+
+        # Button reset
+        self.btn_reset = tk.Button(
+            self.frame,
+            text="Set up chessboard",
+            font=("Arial", 15),
+            command=lambda: self.reset_chessboard(),
+        ).place(x=800, y=900, height=50, width=180)
+
         # clock
-        # self.update_clock()
         self.start_whiteclock()
 
     def start(self):
@@ -1111,6 +1126,14 @@ class Game:
     def start_animation(self):
         """Appeler la création des bases au méthode start()."""
         self.start()
+
+    def check_win(self):
+        """Check live of king."""
+        self.winner = self.board.check_kinglive()
+        if self.winner == "White":
+            self.end_game("White")
+        elif self.winner == "Black":
+            self.end_game("Black")
 
     def start_whiteclock(self):
         """Start or reset clock of White."""
@@ -1196,36 +1219,26 @@ class Game:
             self.bc.set(self.d)
             self.frame.after(1000, self.black_timer)
 
-    # find index of row and column
     def find_indexcase(self, element, matrix):
+        """Find index of row and column."""
         for i in range(len(matrix)):
             for j in range(len(matrix[i])):
                 if matrix[i][j] == element:
                     return i, j
 
-    # def update_clock(self):
-    #     """Mettre à jour le temps."""
-    #     self.sec = self.sec + 1
-    #     self.displaytime.configure(text=self.sec)
-    #     self.canvas.after(1000, self.update_clock)
-    #     while self.sec == 300:
-    #         self.sec = 0
-
-    # update and display turn of player!
     def update_turn(self):
+        """Update and display turn of player."""
         if self.turn == 1:
             self.my_var.set("Turn of Black")
         else:
             self.my_var.set("Turn of White")
 
     def get_move(self):
+        """Check if move is legal."""
         self.value_from = self.player_input1.get().upper()
         self.value_to = self.player_input2.get().upper()
 
         if (self.value_from in self.valid_case) and (self.value_to in self.valid_case):
-
-            self.lbl.config(text="Provided Input: " + self.value_from + self.value_to)
-            self.lbl.place(x=450, y=900, height=30, width=100)
 
             self.old_row, self.old_col = self.find_indexcase(
                 self.value_from, self.coordination
@@ -1245,6 +1258,7 @@ class Game:
                     self.stop_blackclock()
                     self.start_whiteclock()
                 self.update_turn()
+                self.check_win()
 
             else:
                 messagebox.showerror(
@@ -1254,6 +1268,27 @@ class Game:
             messagebox.showwarning(
                 "Warning MessageBox", "Please enter valid case name!"
             )
+
+    def end_game(self, winner):
+        self.delete_pieces()
+        self.canvas.create_text(
+            400,
+            300,
+            font=("MS Serif", 30),
+            text=f"{winner} win !",
+            fill="red",
+        )
+
+    def delete_pieces(self):
+        for i in range(8):
+            for j in range(8):
+                self.canvas.delete(self.board.images_list[i][j])
+                self.board.images_list[i][j] = "None"
+                self.board.pieces_list[i][j] = Piece("none", "empty")
+
+    def reset_chessboard(self):
+        self.board.create_list()
+        self.board.install_pieces(self.canvas)
 
 
 class Chess:
@@ -1265,13 +1300,6 @@ class Chess:
         self.root.title("Chess game")
         self.frame = tk.Frame(self.root, width=1024, height=1024)
         self.frame.pack()
-
-        # self.w = tk.Label(self.frame, text="Hello Tkinter!")
-        # self.w.place(x=800, y=100)
-        # self.w.pack()
-
-        # self.root.mainloop()
-
         self.game = Game(self.frame)
 
     def play(self):
