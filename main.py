@@ -7,10 +7,6 @@ import json
 import operator
 import numpy as np
 from datetime import datetime
-
-# import pgn
-
-
 from matrix import coordination, valid_case
 
 try:
@@ -22,9 +18,6 @@ from tkinter import messagebox
 
 SIZE = 64
 from tkinter import *
-
-global count
-count = 0
 
 
 class Board:
@@ -145,6 +138,7 @@ class Board:
                 self.color = "#815426"
 
     def create_list(self):
+        """List of pieces."""
         for row in range(8):
             for col in range(8):
                 if row == 1:
@@ -291,6 +285,7 @@ class Board:
             return False
 
     def list_moves(self, old_row, old_col, old_color, old_name):
+        """All possible moves of piece."""
         ml = []
 
         for i in range(8):
