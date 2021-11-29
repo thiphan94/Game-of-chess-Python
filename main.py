@@ -6,6 +6,7 @@ import random
 import json
 import operator
 import numpy as np
+from datetime import datetime
 
 # import pgn
 
@@ -81,6 +82,7 @@ class Board:
         self.black_checked = False
         self.bk_location = (0, 4)
         self.wk_location = (7, 4)
+        self.count_line = 1
         self.create_list()
 
     def install_in(self, canvas):
@@ -397,6 +399,19 @@ class Board:
         else:
             self.turn = 0
 
+    def write_pgn(self, old_row, old_col, value_from, value_to):
+        """Save each move to file pgn with name is current time."""
+        file_name = f"{datetime.date(datetime.now())}.pgn"
+        with open(file_name, "a") as text_file:
+            self.name_piece = self.pieces_list[old_row][old_col].return_name()
+            if self.name_piece == "knight":
+                self.name_piece = "night"
+
+            text_file.write(
+                f"{self.count_line}. {self.name_piece[0].upper()}{value_from.lower()} {value_to.lower()}  "
+            )
+            self.count_line += 1
+
     def remove(
         self, canvas, old_row, old_col, new_row, new_col, old_color, old_name, new_name
     ):
@@ -421,7 +436,16 @@ class Board:
         self.pieces_list[new_row][new_col] = Piece(old_color, old_name)
         # self.update_count()
 
-    def check_legal(self, canvas, old_row, old_col, new_row, new_col):
+    def check_legal(
+        self,
+        canvas,
+        old_row,
+        old_col,
+        new_row,
+        new_col,
+        value_from,
+        value_to,
+    ):
         """Check if move is legal."""
 
         self.old_name = self.pieces_list[old_row][old_col].return_name()
@@ -466,6 +490,7 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
+                self.write_pgn(old_row, old_col, value_from, value_to)
                 self.remove(
                     canvas,
                     old_row,
@@ -499,6 +524,7 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
+                self.write_pgn(old_row, old_col, value_from, value_to)
                 self.remove(
                     canvas,
                     old_row,
@@ -533,6 +559,7 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
+                self.write_pgn(old_row, old_col, value_from, value_to)
                 self.remove(
                     canvas,
                     old_row,
@@ -564,6 +591,7 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
+                self.write_pgn(old_row, old_col, value_from, value_to)
                 self.remove(
                     canvas,
                     old_row,
@@ -595,6 +623,7 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
+                self.write_pgn(old_row, old_col, value_from, value_to)
                 self.remove(
                     canvas,
                     old_row,
@@ -625,6 +654,7 @@ class Board:
                 self.new_color,
                 self.new_name,
             ):
+                self.write_pgn(old_row, old_col, value_from, value_to)
                 self.remove(
                     canvas,
                     old_row,
@@ -1037,7 +1067,7 @@ class Game:
         self.board = Board(width, height)
         self.coordination = coordination
         self.valid_case = valid_case
-
+        self.count_line = 1
         # Clock for White
         self.time_white = tk.Label(
             self.frame, text="Timer for White:", font=("Arial", 20)
@@ -1241,9 +1271,17 @@ class Game:
                 self.value_to, self.coordination
             )
 
+            o_r, o_c = self.old_row, self.old_col
             if self.board.check_legal(
-                self.canvas, self.old_row, self.old_col, self.new_row, self.new_col
+                self.canvas,
+                self.old_row,
+                self.old_col,
+                self.new_row,
+                self.new_col,
+                self.value_from,
+                self.value_to,
             ):
+
                 self.turn = self.board.return_turn()
                 if self.turn == 1:
                     self.stop_whiteclock()
