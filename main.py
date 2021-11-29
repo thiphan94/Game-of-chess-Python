@@ -1092,7 +1092,7 @@ class Game:
 
         # move
         self.displayturn2 = tk.Label(
-            self.frame, text="Please chose your piece!", font=("Arial", 25)
+            self.frame, text="Please choose your piece!", font=("Arial", 25)
         ).place(x=100, y=680)
         self.from_label = tk.Label(self.frame, text="From", font=("Arial", 15)).place(
             x=30, y=750
