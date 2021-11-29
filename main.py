@@ -1058,7 +1058,7 @@ class Game:
         self.black_count = 0
         self.canvas = tk.Canvas(self.frame, width=width, height=height)
         self.canvas.pack(side="top", fill="both", expand=True)
-        self.ecran = tk.PhotoImage(file="w2.png")
+        self.ecran = tk.PhotoImage(file="img/w2.png")
         self.board = Board(width, height)
         self.coordination = coordination
         self.valid_case = valid_case
