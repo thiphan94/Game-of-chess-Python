@@ -1127,6 +1127,14 @@ class Game:
             text="Set up chessboard",
             font=("Arial", 15),
             command=lambda: self.reset_chessboard(),
+        ).place(x=800, y=800, height=50, width=180)
+
+        # Button quit
+        self.btn_end = tk.Button(
+            self.frame,
+            text="Quit game",
+            font=("Arial", 15),
+            command=lambda: self.quit(),
         ).place(x=800, y=900, height=50, width=180)
 
         # clock
@@ -1338,6 +1346,10 @@ class Game:
         self.board.install_pieces(self.canvas)
         self.reset_timer()
         self.start_whiteclock()
+
+    def quit(self):
+        """Quit game."""
+        self.frame.quit()
 
 
 class Chess:
